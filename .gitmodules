@@ -1,0 +1,3 @@
+[submodule "round-pong/vendor/GLFW"]
+	path = round-pong/vendor/GLFW
+	url = https://github.com/bartos97/glfw

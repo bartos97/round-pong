@@ -11,8 +11,15 @@ workspace "round-pong"
 
 -- Pattern for output directory name with executable
 outputDirName = "%{cfg.system}-%{cfg.buildcfg}-%{cfg.architecture}"
+includePaths = {}
 
 
+-- Include other project's (dependencies) configurations
+include "round-pong/vendor/GLFW"
+includePaths["GLFW"] = "round-pong/vendor/GLFW/include"
+
+
+-- main project
 project "round-pong"
 	location "round-pong"
 	kind "ConsoleApp"
@@ -33,13 +40,16 @@ project "round-pong"
 	}
 
 	-- Include file search paths for the compiler.
-	--includedirs {
-		--"%{prj.name}/src"
-	--}
+	includedirs {
+		"%{prj.name}/src",
+		"%{includePaths.GLFW}"
+	}
 
 	-- List of libraries and projects to link against.
-	-- links {
-	--}
+	links {
+		"GLFW",
+		"opengl32.lib"
+	}
 
 	filter "system:windows"		
 		systemversion "latest"
@@ -55,3 +65,5 @@ project "round-pong"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "On"
+
+
