@@ -27,6 +27,11 @@ project "round-pong"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
+	
+	-- Precompiler defines
+	defines {
+		"GLFW_INCLUDE_NONE"
+	}
 
 	-- Output directories for executables and intermediates objs.
 	targetdir ("bin/" .. outputDirName .. "/%{prj.name}")
