@@ -1,8 +1,7 @@
 workspace "round-pong"
-	startproject "round-pong"
+	startproject "round-pong"	
 	
-	architecture "x64"
-		
+	architecture "x64"		
 	configurations {
 		"Debug",
 		"Release"
@@ -17,6 +16,9 @@ includePaths = {}
 -- Include other project's (dependencies) configurations
 include "round-pong/vendor/GLFW"
 includePaths["GLFW"] = "round-pong/vendor/GLFW/include"
+
+include "round-pong/vendor/Glad"
+includePaths["Glad"] = "round-pong/vendor/Glad/include"
 
 
 -- main project
@@ -42,18 +44,21 @@ project "round-pong"
 	-- Include file search paths for the compiler.
 	includedirs {
 		"%{prj.name}/src",
-		"%{includePaths.GLFW}"
+		"%{includePaths.GLFW}",
+		"%{includePaths.Glad}"
 	}
 
 	-- List of libraries and projects to link against.
 	links {
 		"GLFW",
-		"opengl32.lib"
+		"opengl32.lib",
+		"Glad"
 	}
 
 	filter "system:windows"		
 		systemversion "latest"
 		pchheader "pch.h"
+		staticruntime "On"
 		
 	filter "system:linux"
 		pchheader "round-pong/src/pch.h"
