@@ -71,9 +71,15 @@ project "round-pong"
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "On"
+		defines {
+			"RP_DEBUG"
+		}
 
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "On"
+		defines {
+			"RP_RELEASE"
+		}
 
 
