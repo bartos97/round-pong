@@ -14,10 +14,10 @@ private:
     int m_height;
     std::string m_title;
 
-    Window(int width = 1280,
-        int height = 720,
-        const std::string& title = "Round Pong");
     void init();
+    Window( int width = 1280,
+            int height = 720,
+            const std::string& title = "Round Pong");
 
     //Singleton protection stuff
 public:
