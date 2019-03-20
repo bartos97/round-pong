@@ -5,7 +5,7 @@
 #include "Window.h"
 
 int main() {
-	auto window = Window::create();
-	delete window;
-	return 0;
+    auto window = Window::create();
+    delete window;
+    return 0;
 }

@@ -5,23 +5,23 @@
  */
 class Window {
 public:
-	static Window* create();
-	~Window();
+    static Window* create();
+    ~Window();
 
 private:
-	static Window* instance;
-	int m_width;
-	int m_height;
-	std::string m_title;
+    static Window* instance;
+    int m_width;
+    int m_height;
+    std::string m_title;
 
-	Window(	int width = 1280,
-			int height = 720,
-			const std::string& title = "Round Pong");
-	void init();
+    Window(int width = 1280,
+        int height = 720,
+        const std::string& title = "Round Pong");
+    void init();
 
-	//Singleton protection stuff
+    //Singleton protection stuff
 public:
-	Window(const Window&) = delete;
-	void operator=(const Window&) = delete;
+    Window(const Window&) = delete;
+    void operator=(const Window&) = delete;
 };
 
