@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "GLFW/glfw3.h"
 #include "Window.h"
 
 //Initialization of static variable
@@ -18,10 +19,37 @@ Window::Window(int width, int height, const std::string& title)
 
 Window::~Window() {
     RP_LOG("Window destruction");
-    //TODO: GLFW window terminate etc.
+    glfwTerminate();
 }
 
 void Window::init() {
     RP_LOG("Creating window: %dx%d %s", m_width, m_height, m_title.c_str());
-    //TODO: add GLFW window creation etc.
+    int tmpStatus;
+
+    tmpStatus = glfwInit();
+    RP_ASSERT(tmpStatus, "GLFW initialization fail.");
+
+    m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
+    RP_ASSERT(m_window, "GLFW window creation fail.");
+    glfwMakeContextCurrent(m_window);
+
+    tmpStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    RP_ASSERT(tmpStatus, "Glad initialization fail.");
+
+    // sets V-Sync
+    glfwSwapInterval(1);
+
+    // Lambda callback function on window resize
+    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) -> void {
+        glViewport(0, 0, width, height);
+    });
+}
+
+void Window::onUpdate() {
+    glfwPollEvents();
+    glfwSwapBuffers(m_window);
+}
+
+GLFWwindow * Window::getWindow() const {
+    return m_window;
 }

@@ -8,16 +8,20 @@ public:
     static Window* create();
     ~Window();
 
-private:
-    static Window* instance;
-    int m_width;
-    int m_height;
-    std::string m_title;
+    void onUpdate();
+    GLFWwindow* getWindow() const;
 
-    void init();
-    Window( int width = 1280,
+private:
+    static Window*  instance;
+    unsigned int    m_width;
+    unsigned int    m_height;
+    std::string     m_title;
+    GLFWwindow*     m_window;
+        
+    Window( int width = 720,
             int height = 720,
             const std::string& title = "Round Pong");
+    void init();
 
     //Singleton protection stuff
 public:
