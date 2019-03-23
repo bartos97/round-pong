@@ -2,14 +2,15 @@
 #include "GLFW/glfw3.h"
 #include "Window.h"
 
-//Initialization of static variable
-Window* Window::instance = nullptr;
+
+// Declaration of static variable
+Window* Window::m_instance;
 
 Window* Window::create() {
-    if (!Window::instance) {
-        Window::instance = new Window();
+    if (!Window::m_instance) {
+        Window::m_instance = new Window();
     }
-    return Window::instance;
+    return Window::m_instance;
 }
 
 Window::Window(int width, int height, const std::string& title)
@@ -18,7 +19,7 @@ Window::Window(int width, int height, const std::string& title)
 }
 
 Window::~Window() {
-    RP_LOG("Window destruction");
+    RP_LOG("Window destroyed.");
     glfwTerminate();
 }
 
@@ -45,11 +46,7 @@ void Window::init() {
     });
 }
 
-void Window::onUpdate() {
+void Window::onUpdate() noexcept  {
     glfwPollEvents();
     glfwSwapBuffers(m_window);
-}
-
-GLFWwindow * Window::getWindow() const {
-    return m_window;
 }

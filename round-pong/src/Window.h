@@ -5,27 +5,22 @@
  */
 class Window {
 public:
-    static Window* create();
     ~Window();
-
-    void onUpdate();
-    GLFWwindow* getWindow() const;
+    static Window* create();
+    void onUpdate()  noexcept;
+    inline GLFWwindow* getWindow() const noexcept { return m_window; }
 
 private:
-    static Window*  instance;
-    unsigned int    m_width;
-    unsigned int    m_height;
-    std::string     m_title;
-    GLFWwindow*     m_window;
-        
     Window( int width = 720,
             int height = 720,
             const std::string& title = "Round Pong");
+
     void init();
 
-    //Singleton protection stuff
-public:
-    Window(const Window&) = delete;
-    void operator=(const Window&) = delete;
+    static Window* m_instance;
+    GLFWwindow* m_window;
+    unsigned int m_width;
+    unsigned int m_height;
+    std::string m_title;
 };
 
