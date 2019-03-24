@@ -64,7 +64,12 @@ void Window::createWindow()
 {
     RP_LOG("Creating window: %dx%d %s", m_data.width, m_data.height, m_data.title.c_str());
 
+#ifdef RP_FULLSCREEN
+    m_window = glfwCreateWindow(1600, 900, m_data.title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+#else
     m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
+#endif // RP_FULLSCREEN
+
     RP_ASSERT(m_window, "GLFW window creation fail.");
 
     glfwMakeContextCurrent(m_window);

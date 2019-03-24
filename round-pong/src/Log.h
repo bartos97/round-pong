@@ -1,12 +1,6 @@
 #pragma once
 
 
-#ifdef RP_DEBUG
-    #define RP_ENABLE_LOG
-    #define RP_ENABLE_ASSERT
-#endif // RP_DEBUG
-
-
 #ifdef RP_ENABLE_LOG
     #define RP_LOG(...) \
     { \

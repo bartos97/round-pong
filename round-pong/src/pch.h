@@ -7,4 +7,5 @@
 #include <string>
 #include <memory>
 
+#include "Core.h"
 #include "Log.h"
