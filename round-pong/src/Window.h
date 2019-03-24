@@ -3,7 +3,8 @@
 /**
  * Singleton class for creating OS window
  */
-class Window {
+class Window
+{
 public:
     ~Window();
     static Window* create();
@@ -11,9 +12,9 @@ public:
     inline GLFWwindow* getWindow() const noexcept { return m_window; }
 
 private:
-    Window( int width = 720,
-            int height = 720,
-            const std::string& title = "Round Pong");
+    Window(int width = 720,
+           int height = 720,
+           const std::string& title = "Round Pong");
 
     void init();
 

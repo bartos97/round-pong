@@ -6,7 +6,8 @@
 #endif // RP_DEBUG
 
 #ifdef RP_ENABLE_LOG
-    #define RP_LOG(...) { \
+    #define RP_LOG(...) \
+    { \
         printf("%s at line %d:\n\t", __FILE__, __LINE__); \
         printf(__VA_ARGS__); \
         putchar('\n'); \
@@ -16,8 +17,10 @@
 #endif // RP_ENABLE_LOG
 
 #ifdef RP_ENABLE_ASSERT
-    #define RP_ASSERT(x, ...) { \
-        if (!x) {\
+    #define RP_ASSERT(x, ...) \
+    { \
+        if (!x) \
+        {\
             printf("%s at line %d: \n\tASSERTION FAILED!: ", __FILE__, __LINE__); \
             printf(__VA_ARGS__); \
             putchar('\n'); \

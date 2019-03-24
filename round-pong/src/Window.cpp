@@ -6,24 +6,29 @@
 // Declaration of static variable
 Window* Window::m_instance;
 
-Window* Window::create() {
-    if (!Window::m_instance) {
+Window* Window::create()
+{
+    if (!Window::m_instance)
+    {
         Window::m_instance = new Window();
     }
     return Window::m_instance;
 }
 
 Window::Window(int width, int height, const std::string& title)
-    : m_width(width), m_height(height), m_title(title) {
+    : m_width(width), m_height(height), m_title(title)
+{
     this->init();
 }
 
-Window::~Window() {
+Window::~Window()
+{
     RP_LOG("Window destroyed.");
     glfwTerminate();
 }
 
-void Window::init() {
+void Window::init()
+{
     RP_LOG("Creating window: %dx%d %s", m_width, m_height, m_title.c_str());
     int tmpStatus;
 
@@ -46,7 +51,8 @@ void Window::init() {
     });
 }
 
-void Window::onUpdate() noexcept  {
+void Window::onUpdate() noexcept
+{
     glfwPollEvents();
     glfwSwapBuffers(m_window);
 }
