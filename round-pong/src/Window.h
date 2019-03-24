@@ -6,17 +6,20 @@
 class Window
 {
 public:
-    ~Window();
     static Window* create();
     void onUpdate()  noexcept;
-    inline GLFWwindow* getWindow() const noexcept { return m_window; }
+    GLFWwindow* getWindow() const noexcept { return m_window; }
+    ~Window();
 
 private:
     Window(int width = 720,
            int height = 720,
            const std::string& title = "Round Pong");
 
-    void init();
+    inline void initGLFW();
+    inline void initGlad();
+    inline void createWindow();
+    inline void setCallbacks();
 
     static Window* m_instance;
     GLFWwindow* m_window;

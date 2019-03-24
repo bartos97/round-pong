@@ -6,6 +6,7 @@
 // Declaration of static variable
 Window* Window::m_instance;
 
+
 Window* Window::create()
 {
     if (!Window::m_instance)
@@ -15,10 +16,11 @@ Window* Window::create()
     return Window::m_instance;
 }
 
-Window::Window(int width, int height, const std::string& title)
-    : m_width(width), m_height(height), m_title(title)
+
+void Window::onUpdate() noexcept
 {
-    this->init();
+    glfwPollEvents();
+    glfwSwapBuffers(m_window);
 }
 
 Window::~Window()
@@ -27,32 +29,47 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::init()
+
+Window::Window(int width, int height, const std::string& title)
+    : m_width(width), m_height(height), m_title(title)
 {
-    RP_LOG("Creating window: %dx%d %s", m_width, m_height, m_title.c_str());
-    int tmpStatus;
+    initGLFW();
+    createWindow();
+    initGlad();
+    setCallbacks();
+}
 
-    tmpStatus = glfwInit();
+
+void Window::initGLFW()
+{
+    int tmpStatus = glfwInit();
     RP_ASSERT(tmpStatus, "GLFW initialization fail.");
-
-    m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
-    RP_ASSERT(m_window, "GLFW window creation fail.");
-    glfwMakeContextCurrent(m_window);
-
-    tmpStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    RP_ASSERT(tmpStatus, "Glad initialization fail.");
 
     // sets V-Sync
     glfwSwapInterval(1);
+}
 
-    // Lambda callback function on window resize
+
+void Window::initGlad()
+{
+    int tmpStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    RP_ASSERT(tmpStatus, "Glad initialization fail.");
+}
+
+
+void Window::createWindow()
+{
+    RP_LOG("Creating window: %dx%d %s", m_width, m_height, m_title.c_str());
+    m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
+    RP_ASSERT(m_window, "GLFW window creation fail.");
+    glfwMakeContextCurrent(m_window);
+}
+
+
+void Window::setCallbacks()
+{
+    // Lambda callback function on window resize event
     glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) -> void {
         glViewport(0, 0, width, height);
     });
-}
-
-void Window::onUpdate() noexcept
-{
-    glfwPollEvents();
-    glfwSwapBuffers(m_window);
 }
