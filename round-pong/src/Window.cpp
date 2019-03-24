@@ -3,7 +3,7 @@
 #include "Window.h"
 
 
-// Declaration of static variable
+// Declaration of static variable (nullptr by default)
 Window* Window::m_instance;
 
 
@@ -31,8 +31,11 @@ Window::~Window()
 
 
 Window::Window(int width, int height, const std::string& title)
-    : m_width(width), m_height(height), m_title(title)
 {
+    m_data.width  = width;
+    m_data.height = height;
+    m_data.title  = title;
+
     initGLFW();
     createWindow();
     initGlad();
@@ -46,7 +49,7 @@ void Window::initGLFW()
     RP_ASSERT(tmpStatus, "GLFW initialization fail.");
 
     // sets V-Sync
-    glfwSwapInterval(1);
+    glfwSwapInterval(1);    
 }
 
 
@@ -59,10 +62,15 @@ void Window::initGlad()
 
 void Window::createWindow()
 {
-    RP_LOG("Creating window: %dx%d %s", m_width, m_height, m_title.c_str());
-    m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
+    RP_LOG("Creating window: %dx%d %s", m_data.width, m_data.height, m_data.title.c_str());
+
+    m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
     RP_ASSERT(m_window, "GLFW window creation fail.");
+
     glfwMakeContextCurrent(m_window);
+
+    // associate window data with GLFW window
+    glfwSetWindowUserPointer(m_window, &m_data);
 }
 
 

@@ -1,13 +1,22 @@
 #pragma once
 
 /**
- * Singleton class for creating OS window
+ * Singleton class for creating OS native window
  */
 class Window
 {
 public:
+    /**
+     * Object initialization function 
+     * @return Pointer to (only) instance of this class
+     */
     static Window* create();
-    void onUpdate()  noexcept;
+
+    /**
+     * Function to call every frame refresh
+     */
+    void onUpdate() noexcept;
+
     GLFWwindow* getWindow() const noexcept { return m_window; }
     ~Window();
 
@@ -22,9 +31,20 @@ private:
     inline void setCallbacks();
 
     static Window* m_instance;
-    GLFWwindow* m_window;
-    unsigned int m_width;
-    unsigned int m_height;
-    std::string m_title;
+    GLFWwindow*    m_window;
+  
+    /** 
+     * Basic informations about window and pointer to callback function for all events.
+     * Used to associate data with actual GLFW window object.
+     */
+    struct WindowData
+    {
+        unsigned int width;
+        unsigned int height;
+        std::string  title;
+        // TODO: event callback function pointer
+        // this function ought to be bind in Application
+    };
+    WindowData m_data;
 };
 

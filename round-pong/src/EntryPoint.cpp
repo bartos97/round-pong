@@ -3,7 +3,7 @@
 
 int main()
 {
-    RP_LOG("Compiled at %s", __TIME__);
+    RP_LOG("Compiled at %s %s", __DATE__, __TIME__);
     auto app = Application::create();
     app->run();
     delete app;
