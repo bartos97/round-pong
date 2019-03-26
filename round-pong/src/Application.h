@@ -3,6 +3,7 @@
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 #include "Events/KeyEvents.h"
+#include "Events/MouseEvents.h"
 
 
 #define APP_BIND_EVENT(eventName) \
@@ -35,8 +36,13 @@ public:
 private:
     void onWindowClose(WindowCloseEvent& e);
     void onWindowResize(WindowResizeEvent& e);
+
     void onKeyPress(KeyPressEvent& e);
     void onKeyRelease(KeyReleaseEvent& e);
+
+    void onMouseMove(MouseMoveEvent& e);
+    void onMouseButtonPress(MouseButtonPressEvent& e);
+    void onMouseButtonRelease(MouseButtonReleaseEvent& e);
 
     bool m_isRunning;
     static Application* m_instance;

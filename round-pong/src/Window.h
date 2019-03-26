@@ -2,6 +2,7 @@
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
 #include "Events/KeyEvents.h"
+#include "Events/MouseEvents.h"
 
 
 /**
@@ -46,10 +47,13 @@ private:
         unsigned int height;
         std::string  title;
         // these functions ought to be bind in Application
-        std::function<void(WindowCloseEvent&)> callbackOnWindowClose;
-        std::function<void(WindowResizeEvent&)> callbackOnWindowResize;
-        std::function<void(KeyPressEvent&)> callbackOnKeyPress;
-        std::function<void(KeyReleaseEvent&)> callbackOnKeyRelease;
+        std::function<void(WindowCloseEvent&)>          callbackOnWindowClose;
+        std::function<void(WindowResizeEvent&)>         callbackOnWindowResize;
+        std::function<void(KeyPressEvent&)>             callbackOnKeyPress;
+        std::function<void(KeyReleaseEvent&)>           callbackOnKeyRelease;
+        std::function<void(MouseMoveEvent&)>            callbackOnMouseMove;
+        std::function<void(MouseButtonPressEvent&)>     callbackOnMouseButtonPress;
+        std::function<void(MouseButtonReleaseEvent&)>   callbackOnMouseButtonRelease;
     };
 
     WindowData      m_data;

@@ -128,6 +128,35 @@ void Window::setCallbacks()
         }
     });
 
+    // Mouse move callback
+    glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xpos, double ypos) {
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+
+        MouseMoveEvent event(xpos, ypos);
+        dataPtr->callbackOnMouseMove(event);
+    });
+
+    // Mouse button press callback
+    glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods) {
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+
+        switch (action)
+        {
+            case GLFW_PRESS:
+            {
+                MouseButtonPressEvent event(button);
+                dataPtr->callbackOnMouseButtonPress(event);
+                break;
+            }
+            case GLFW_RELEASE:
+            {
+                MouseButtonReleaseEvent event(button);
+                dataPtr->callbackOnMouseButtonRelease(event);
+                break;
+            }
+        }
+    });
+    
     // Frame buffer resize callback
     glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);

@@ -15,6 +15,9 @@ Application::Application()
     APP_BIND_EVENT(WindowResize);
     APP_BIND_EVENT(KeyPress);
     APP_BIND_EVENT(KeyRelease);
+    APP_BIND_EVENT(MouseMove);
+    APP_BIND_EVENT(MouseButtonPress);
+    APP_BIND_EVENT(MouseButtonRelease);
 
     m_isRunning = true;
 }
@@ -53,6 +56,7 @@ void Application::onWindowClose(WindowCloseEvent & e)
     e.m_isHandled = true;
 }
 
+
 void Application::onWindowResize(WindowResizeEvent & e)
 {
     RP_EVENT_LOG(e, "Window resized to %d x %d", e.getWidth(), e.getHeight());
@@ -77,5 +81,26 @@ void Application::onKeyPress(KeyPressEvent & e)
 void Application::onKeyRelease(KeyReleaseEvent & e)
 {
     RP_EVENT_LOG(e, "Key #%d released", e.getKeyCode());
+    e.m_isHandled = true;
+}
+
+
+void Application::onMouseMove(MouseMoveEvent & e)
+{
+    RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", e.getX(), e.getY());
+    e.m_isHandled = true;
+}
+
+
+void Application::onMouseButtonPress(MouseButtonPressEvent & e)
+{
+    RP_EVENT_LOG(e, "Mouse button #%d pressed", e.getButton());
+    e.m_isHandled = true;
+}
+
+
+void Application::onMouseButtonRelease(MouseButtonReleaseEvent & e)
+{
+    RP_EVENT_LOG(e, "Mouse button #%d released", e.getButton());
     e.m_isHandled = true;
 }

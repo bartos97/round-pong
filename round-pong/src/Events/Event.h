@@ -9,7 +9,7 @@ enum class EventCode
     None = 0,
     WindowClose, WindowResize,
     KeyPress, KeyRelease, KeyRepeat,
-    MouseClick, MouseRelease, MouseMove, MouseScroll
+    MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll
 };
 
 
