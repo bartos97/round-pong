@@ -7,6 +7,26 @@
 Window* Window::m_instance;
 
 
+Window::~Window()
+{
+    RP_LOG("Window destroyed.");
+    glfwTerminate();
+}
+
+
+Window::Window(int width, int height, const std::string& title)
+{
+    m_data.width = width;
+    m_data.height = height;
+    m_data.title = title;
+
+    initGLFW();
+    createWindow();
+    initGlad();
+    setCallbacks();
+}
+
+
 Window* Window::create()
 {
     if (!Window::m_instance)
@@ -21,25 +41,6 @@ void Window::onUpdate() noexcept
 {
     glfwPollEvents();
     glfwSwapBuffers(m_window);
-}
-
-Window::~Window()
-{
-    RP_LOG("Window destroyed.");
-    glfwTerminate();
-}
-
-
-Window::Window(int width, int height, const std::string& title)
-{
-    m_data.width  = width;
-    m_data.height = height;
-    m_data.title  = title;
-
-    initGLFW();
-    createWindow();
-    initGlad();
-    setCallbacks();
 }
 
 
@@ -81,8 +82,28 @@ void Window::createWindow()
 
 void Window::setCallbacks()
 {
-    // Lambda callback function on window resize event
-    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) -> void {
+    // Window close callback
+    glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
+        //retrieve data associated with window
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+
+        WindowCloseEvent event;
+        dataPtr->onCloseCallback(event);
+    });
+
+    // Window resize callback
+    glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+        //retrieve data associated with window
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+        dataPtr->width = width;
+        dataPtr->height = height;
+
+        WindowResizeEvent event(width, height);
+        dataPtr->onResizeCallback(event);
+    });
+
+    // Frame buffer resize callback
+    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
         glViewport(0, 0, width, height);
     });
 }

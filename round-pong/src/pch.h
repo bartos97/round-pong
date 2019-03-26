@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <functional>
 
 #include "Core.h"
 #include "Log.h"

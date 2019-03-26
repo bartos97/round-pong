@@ -1,11 +1,23 @@
 #pragma once
+#include "Events/Event.h"
+#include "Events/WindowEvents.h"
 
 /**
  * Singleton class for creating OS native window
+ * Available to create only from Application
  */
 class Window
 {
+    friend class Application;
+    
 public:
+    ~Window();
+
+private:
+    Window(int width = 720,
+           int height = 720,
+           const std::string& title = "Round Pong");
+
     /**
      * Object initialization function 
      * @return Pointer to (only) instance of this class
@@ -17,24 +29,13 @@ public:
      */
     void onUpdate() noexcept;
 
-    GLFWwindow* getWindow() const noexcept { return m_window; }
-    ~Window();
-
-private:
-    Window(int width = 720,
-           int height = 720,
-           const std::string& title = "Round Pong");
-
     inline void initGLFW();
     inline void initGlad();
     inline void createWindow();
-    inline void setCallbacks();
-
-    static Window* m_instance;
-    GLFWwindow*    m_window;
+    inline void setCallbacks();    
   
     /** 
-     * Basic informations about window and pointer to callback function for all events.
+     * Basic informations about window and pointers to callback functions for events.
      * Used to associate data with actual GLFW window object.
      */
     struct WindowData
@@ -42,9 +43,13 @@ private:
         unsigned int width;
         unsigned int height;
         std::string  title;
-        // TODO: event callback function pointer
-        // this function ought to be bind in Application
+        // these functions ought to be bind in Application
+        std::function<void(WindowCloseEvent&)> onCloseCallback;
+        std::function<void(WindowResizeEvent&)> onResizeCallback;
     };
-    WindowData m_data;
+
+    WindowData      m_data;
+    static Window*  m_instance;
+    GLFWwindow*     m_window;
 };
 
