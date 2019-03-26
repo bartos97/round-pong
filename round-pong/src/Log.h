@@ -11,7 +11,7 @@
 
     #define RP_EVENT_LOG(e, ...) \
     { \
-        printf("Event #%d %s:", e.getType(), e.getName()); \
+        printf("Event #%d %s: ", e.getType(), e.getName()); \
         printf(__VA_ARGS__); \
         putchar('\n'); \
     }

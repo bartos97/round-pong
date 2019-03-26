@@ -5,14 +5,14 @@
 class WindowCloseEvent : public Event
 {
 public:
-    EVENT_GETTYPE_IMPL(windowClose);
+    EVENT_GET_INFO_IMPL(WindowClose)
 };
 
 
 class WindowResizeEvent : public Event
 {
 public:
-    EVENT_GETTYPE_IMPL(windowResize);
+    EVENT_GET_INFO_IMPL(WindowResize)
 
     WindowResizeEvent(unsigned int width, unsigned int height)
         : m_width(width), m_height(height)

@@ -6,10 +6,10 @@
  */
 enum class EventCode
 {
-    none = 0,
-    windowClose, windowResize,
-    keyPress, keyRelease,
-    mouseClick, mouseRelease, mouseMove, mouseScroll
+    None = 0,
+    WindowClose, WindowResize,
+    KeyPress, KeyRelease, KeyRepeat,
+    MouseClick, MouseRelease, MouseMove, MouseScroll
 };
 
 
@@ -20,29 +20,22 @@ class Event
 {
 public:
     bool m_isHandled = false;
+    virtual EventCode getType() const noexcept = 0;
 
 #ifdef RP_DEBUG
-    virtual EventCode getType() const noexcept = 0;
     virtual const char* getName() const noexcept = 0;
 #endif // RP_DEBUG
 };
 
 
+/**
+ * Macro with definitions of common events functions
+ */
 #ifdef RP_DEBUG
     #define EVENT_GET_INFO_IMPL(x) \
         virtual EventCode getType() const noexcept override { return EventCode::##x; } \
         virtual const char* getName() const noexcept { return #x; }
 #elif RP_RELEASE
-    #define EVENT_GET_INFO_IMPL(x)
+    #define EVENT_GET_INFO_IMPL(x) \
+        virtual EventCode getType() const noexcept override { return EventCode::##x; }
 #endif // RP_DEBUG
-
-
-//class EventDispatcher
-//{
-//public:
-//    EventDispatcher(Event& event);
-//    bool dispatch();
-//
-//private:
-//    Event& m_event;
-//};

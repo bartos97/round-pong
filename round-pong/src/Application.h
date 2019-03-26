@@ -2,6 +2,11 @@
 #include "Window.h"
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
+#include "Events/KeyEvents.h"
+
+
+#define APP_BIND_EVENT(eventName) \
+    m_window->m_data.callbackOn##eventName = std::bind(&Application::on##eventName, this, std::placeholders::_1)
 
 
 /**
@@ -12,6 +17,7 @@ class Application
 {
 private:
     Application();
+
 public:
     ~Application();
 
@@ -26,10 +32,12 @@ public:
      */
     void run();
 
+private:
     void onWindowClose(WindowCloseEvent& e);
     void onWindowResize(WindowResizeEvent& e);
+    void onKeyPress(KeyPressEvent& e);
+    void onKeyRelease(KeyReleaseEvent& e);
 
-private:
     bool m_isRunning;
     static Application* m_instance;
     std::unique_ptr<Window> m_window;

@@ -6,14 +6,15 @@
 Application* Application::m_instance;
 
 
-
 Application::Application()
 {
     RP_LOG("Application constructed.");
     m_window = std::unique_ptr<Window>(Window::create());
 
-    m_window->m_data.onCloseCallback = std::bind(&Application::onWindowClose, this, std::placeholders::_1);
-    m_window->m_data.onResizeCallback = std::bind(&Application::onWindowResize, this, std::placeholders::_1);
+    APP_BIND_EVENT(WindowClose);
+    APP_BIND_EVENT(WindowResize);
+    APP_BIND_EVENT(KeyPress);
+    APP_BIND_EVENT(KeyRelease);
 
     m_isRunning = true;
 }
@@ -58,3 +59,23 @@ void Application::onWindowResize(WindowResizeEvent & e)
     e.m_isHandled = true;
 }
 
+
+void Application::onKeyPress(KeyPressEvent & e)
+{
+    int code = e.getKeyCode();
+    RP_EVENT_LOG(e, "Key #%d pressed, repeated %d", code, e.getRepeatState());
+
+    if (code == GLFW_KEY_ESCAPE)
+    {
+        m_isRunning = false;
+    }
+
+    e.m_isHandled = true;
+}
+
+
+void Application::onKeyRelease(KeyReleaseEvent & e)
+{
+    RP_EVENT_LOG(e, "Key #%d released", e.getKeyCode());
+    e.m_isHandled = true;
+}

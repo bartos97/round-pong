@@ -1,6 +1,8 @@
 #pragma once
 #include "Events/Event.h"
 #include "Events/WindowEvents.h"
+#include "Events/KeyEvents.h"
+
 
 /**
  * Singleton class for creating OS native window
@@ -44,8 +46,10 @@ private:
         unsigned int height;
         std::string  title;
         // these functions ought to be bind in Application
-        std::function<void(WindowCloseEvent&)> onCloseCallback;
-        std::function<void(WindowResizeEvent&)> onResizeCallback;
+        std::function<void(WindowCloseEvent&)> callbackOnWindowClose;
+        std::function<void(WindowResizeEvent&)> callbackOnWindowResize;
+        std::function<void(KeyPressEvent&)> callbackOnKeyPress;
+        std::function<void(KeyReleaseEvent&)> callbackOnKeyRelease;
     };
 
     WindowData      m_data;

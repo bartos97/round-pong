@@ -88,18 +88,44 @@ void Window::setCallbacks()
         WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
 
         WindowCloseEvent event;
-        dataPtr->onCloseCallback(event);
+        dataPtr->callbackOnWindowClose(event);
     });
 
     // Window resize callback
     glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
-        //retrieve data associated with window
         WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
         dataPtr->width = width;
         dataPtr->height = height;
 
         WindowResizeEvent event(width, height);
-        dataPtr->onResizeCallback(event);
+        dataPtr->callbackOnWindowResize(event);
+    });
+
+    // Key input callback
+    glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+
+        switch (action)
+        {
+            case GLFW_PRESS:
+            {
+                KeyPressEvent event(key, false);
+                dataPtr->callbackOnKeyPress(event);
+                break;
+            }
+            case GLFW_REPEAT:
+            {
+                KeyPressEvent event(key, true);
+                dataPtr->callbackOnKeyPress(event);
+                break;
+            }
+            case GLFW_RELEASE:
+            {
+                KeyReleaseEvent event(key);
+                dataPtr->callbackOnKeyRelease(event);
+                break;
+            }
+        }
     });
 
     // Frame buffer resize callback
