@@ -64,9 +64,15 @@ project "round-pong"
 		systemversion "latest"
 		pchheader "pch.h"
 		staticruntime "On"
+		defines {
+			"RP_SYSTEM_WINDOWS"
+		}
 		
 	filter "system:linux"
 		pchheader "round-pong/src/pch.h"
+		defines {
+			"RP_SYSTEM_LINUX"
+		}
 
 	filter "configurations:Debug"
 		runtime "Debug"
