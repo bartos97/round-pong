@@ -2,16 +2,16 @@
 
 void GLerrorClear()
 {
-	while (glGetError() != GL_NO_ERROR);
+    while (glGetError() != GL_NO_ERROR);
 }
 
 bool GLerrorCheck()
 {
-	bool retval = true;
-	while (GLenum err = glGetError())
-	{
-		RP_LOG("[OpenGL error]: %#06x", err);
-		retval = false;
-	}
-	return retval;
+    bool retval = true;
+    while (GLenum err = glGetError())
+    {
+        RP_LOG("[OpenGL error]: %#06x", err);
+        retval = false;
+    }
+    return retval;
 }
