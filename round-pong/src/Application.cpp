@@ -69,11 +69,11 @@ void Application::run()
     va.addBuffer(vb, layout);
 
     float r, g, b, i, arg, j;
-    j = i = r = g = b = arg = 0.0f;
+    i = r = g = b = arg = 0.0f;
 
     while (m_isRunning)
     {
-        glClearColor(40.0f / 255.0f, 43.0f / 255.0f, 46.0f / 255.0f, 1.0f);
+        glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         arg += 0.05f;
@@ -81,13 +81,12 @@ void Application::run()
         r = i;
         g = 2 * r;
         b = g / 2;
-        j = i;
 
         va.bind();
         vb.bind();
         shader.bind();
         shader.setUniform("uniformColor", r, g, b);
-        shader.setUniform("uniformPos", j);
+        shader.setUniform("uniformPos", i);
 
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

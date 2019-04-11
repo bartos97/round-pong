@@ -35,11 +35,12 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const BufferLayout& layout)
 
     const auto& layoutElements = layout.getElements();
     unsigned int offset = 0;
+    unsigned int stride = layout.getStride();
 
     for (unsigned int i = 0; i < layoutElements.size(); i++)
     {
         const auto& el = layoutElements[i];
-        glVertexAttribPointer(i, el.count, el.type, el.normalized, layout.getStride(), (const void*)offset);
+        glVertexAttribPointer(i, el.count, el.type, el.normalized, stride, (const void*)offset);
         glEnableVertexAttribArray(i);
         offset += el.count * BufferLayout::getSizeOfGLtype(el.type);
     }
