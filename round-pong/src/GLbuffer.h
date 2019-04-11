@@ -6,7 +6,7 @@
 class GLbuffer
 {
 public:
-    virtual void bind() = 0;
+    virtual void bind() const = 0;
     ~GLbuffer();
 
 protected:

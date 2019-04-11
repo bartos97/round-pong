@@ -7,7 +7,7 @@ VertexBuffer::VertexBuffer(unsigned int size, const void* data, GLenum usagePatt
 {}
 
 
-void VertexBuffer::bind()
+void VertexBuffer::bind() const
 {
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
 }

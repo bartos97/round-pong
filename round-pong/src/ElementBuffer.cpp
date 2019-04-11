@@ -2,12 +2,12 @@
 #include "ElementBuffer.h"
 
 
-ElementBuffer::ElementBuffer(unsigned int size, const void* data, GLenum usagePattern)
-    : GLbuffer(GL_ELEMENT_ARRAY_BUFFER, size, data, usagePattern)
+ElementBuffer::ElementBuffer(unsigned int count, const unsigned int* data, GLenum usagePattern)
+    : GLbuffer(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, usagePattern)
 {}
 
 
-void ElementBuffer::bind()
+void ElementBuffer::bind() const
 {
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
 }

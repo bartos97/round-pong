@@ -13,7 +13,7 @@ public:
      */
     VertexBuffer(unsigned int size, const void* data, GLenum usagePattern = GL_STATIC_DRAW);
 
-    virtual void bind() override;
+    virtual void bind() const override;
     static void unbindAll();
 };
 
