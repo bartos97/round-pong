@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "Application.h"
-#include "VertexBuffer.h"
-#include "ElementBuffer.h"
-#include "VertexArray.h"
-#include "Shader.h"
+#include "Renderer.h"
 #include <math.h>
 
 
@@ -60,36 +57,33 @@ void Application::run()
 
     Shader shader("src/Shaders/test.vert", "src/Shaders/test.frag");
 
-    VertexArray va;
     VertexBuffer vb(sizeof(vertices1), vertices1);
     ElementBuffer eb(6, indices);
 
     BufferLayout layout;
     layout.add<float>(2); //position
-    va.addBuffer(vb, layout);
 
-    float r, g, b, i, arg, j;
-    i = r = g = b = arg = 0.0f;
+    VertexArray va(vb, eb, layout);
+    Renderer renderer;
+
+    va.unbind();
+    vb.unbindAll();
+    eb.unbindAll();
+
+    float i, arg;
+    i = arg = 0.0f;
 
     while (m_isRunning)
     {
-        glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.clearScreen();
 
-        arg += 0.05f;
+        arg += 0.01f;
         i = sin(arg) / 2.0f + 0.5f;
-        r = i;
-        g = 2 * r;
-        b = g / 2;
 
-        va.bind();
-        vb.bind();
-        shader.bind();
-        shader.setUniform("uniformColor", r, g, b);
+        shader.setUniform("uniformColor", i, 0.5f, 0.5f);
         shader.setUniform("uniformPos", i);
 
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        renderer.draw(va, shader);
 
         m_window->onUpdate();
     }

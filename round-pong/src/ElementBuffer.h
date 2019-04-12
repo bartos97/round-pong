@@ -15,5 +15,10 @@ public:
 
     virtual void bind() const override;
     static void unbindAll();
+
+    unsigned int getCount() const;
+
+private:
+    unsigned int m_count;
 };
 

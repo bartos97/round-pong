@@ -3,9 +3,22 @@
 
 
 VertexArray::VertexArray()
+    : m_vertexBuffer(nullptr), m_elementBuffer(nullptr)
 {
     GL_CALL(glGenVertexArrays(1, &m_id));
     GL_CALL(glBindVertexArray(m_id));
+}
+
+VertexArray::VertexArray(const VertexBuffer & vb, const ElementBuffer & eb, const BufferLayout & layout)
+{
+    m_vertexBuffer = &vb;
+    m_elementBuffer = &eb;
+
+    GL_CALL(glGenVertexArrays(1, &m_id));
+    GL_CALL(glBindVertexArray(m_id));
+
+    addBuffer(vb, layout);
+    addBuffer(eb);
 }
 
 
@@ -28,6 +41,20 @@ void VertexArray::unbind() const
 }
 
 
+const VertexBuffer & VertexArray::getVertexBuffer() const
+{
+    RP_ASSERT(m_vertexBuffer, "There is no vertex buffer assigned to vertex array #%d", m_id);
+    return *(m_vertexBuffer);
+}
+
+
+const ElementBuffer & VertexArray::getElementBuffer() const
+{
+    RP_ASSERT(m_elementBuffer, "There is no element buffer assigned to vertex array #%d", m_id);
+    return *(m_elementBuffer);
+}
+
+
 void VertexArray::addBuffer(const VertexBuffer& vb, const BufferLayout& layout)
 {
     bind();
@@ -45,4 +72,10 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const BufferLayout& layout)
         offset += el.count * BufferLayout::getSizeOfGLtype(el.type);
     }
 
+}
+
+void VertexArray::addBuffer(const ElementBuffer& eb)
+{
+    bind();
+    eb.bind();
 }
