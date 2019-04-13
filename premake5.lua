@@ -30,7 +30,8 @@ project "round-pong"
 	
 	-- Precompiler defines
 	defines {
-		"GLFW_INCLUDE_NONE"
+		"GLFW_INCLUDE_NONE",
+		"_USE_MATH_DEFINES"
 	}
 
 	-- Output directories for executables and intermediates objs.

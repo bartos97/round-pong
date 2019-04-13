@@ -54,7 +54,7 @@ void Window::initGLFW()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // sets V-Sync
-    glfwSwapInterval(1);    
+    //glfwSwapInterval(1);    
 }
 
 

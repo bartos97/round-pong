@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Application.h"
 #include "Renderer.h"
-#include <math.h>
+#include <cmath>
 
 
 // Declaration of static variable
@@ -42,23 +42,51 @@ void Application::run()
 {
     RP_LOG("App starts running.");    
 
-    float vertices1[] = {
-        //position   
-        -1.0f, -1.0f,
-         0.0f, -1.0f,
-         0.0f, 0.0f, 
-        -1.0f, 0.0f, 
-    };
+    const double radius = 0.9;
+    const double radius2 = radius + (1.0 / 16.0);
+    const unsigned int numOfSegments = 32;
+    const double angle = M_PI / 6.0;
+    const double angleInc = angle / static_cast<double>(numOfSegments);
 
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
+    std::vector<float> arcVertices;
+    arcVertices.reserve((numOfSegments + 1) * 2 * 2);
+
+    std::vector<unsigned int> arcIndecies;
+    arcIndecies.reserve(numOfSegments * 6);
+
+    double startAngle = 0.0;
+    float tmpX, tmpY;
+    double tmpSin, tmpCos;
+
+    for (unsigned int i = 0; i < numOfSegments + 1; i++)
+    {
+        tmpCos = std::cos(startAngle);
+        tmpSin = std::sin(startAngle);
+
+        tmpX = static_cast<float>(tmpCos * radius);
+        tmpY = static_cast<float>(tmpSin * radius);
+        arcVertices.push_back(tmpX);
+        arcVertices.push_back(tmpY);
+
+        tmpX = static_cast<float>(tmpCos * radius2);
+        tmpY = static_cast<float>(tmpSin * radius2);
+        arcVertices.push_back(tmpX);
+        arcVertices.push_back(tmpY);        
+
+        startAngle += angleInc;
+    }
+
+    for (unsigned int i = 0; i < numOfSegments * 2; i++)
+    {
+        arcIndecies.push_back(i);
+        arcIndecies.push_back(i + 1);
+        arcIndecies.push_back(i + 2);
+    }
 
     Shader shader("src/Shaders/test.vert", "src/Shaders/test.frag");
 
-    VertexBuffer vb(sizeof(vertices1), vertices1);
-    ElementBuffer eb(6, indices);
+    VertexBuffer vb(unsigned int(arcVertices.size() * sizeof(float)), arcVertices.data());
+    ElementBuffer eb(unsigned int(arcIndecies.size()), arcIndecies.data());
 
     BufferLayout layout;
     layout.add<float>(2); //position
@@ -70,19 +98,19 @@ void Application::run()
     vb.unbindAll();
     eb.unbindAll();
 
-    float i, arg;
-    i = arg = 0.0f;
+    const float INC = 1.0f / 256.0f;
+    float i = INC;
+    float r = i;
 
     while (m_isRunning)
     {
         renderer.clearScreen();
 
-        arg += 0.01f;
-        i = sin(arg) / 2.0f + 0.5f;
+        if (r >= 1.0f) i = -INC;
+        else if (r <= 0.0f) i = INC;
+        r += i;
 
-        shader.setUniform("uniformColor", i, 0.5f, 0.5f);
-        shader.setUniform("uniformPos", i);
-
+        shader.setUniform("uniformColor", r, 0.5f, 0.1f, 1.0f);
         renderer.draw(va, shader);
 
         m_window->onUpdate();

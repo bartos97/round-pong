@@ -5,7 +5,7 @@ void Renderer::draw(const VertexArray & va, const Shader & shader)
 {
     va.bind();
     shader.bind();
-    glDrawElements(GL_TRIANGLES, va.getElementBuffer().getCount(), GL_UNSIGNED_INT, 0);
+    GL_CALL(glDrawElements(GL_TRIANGLES, va.getElementBuffer().getCount(), GL_UNSIGNED_INT, 0));
 }
 
 void Renderer::clearScreen() const

@@ -17,8 +17,8 @@ public:
     ~Window();
 
 private:
-    Window(int width = 720,
-           int height = 720,
+    Window(int width = 900,
+           int height = 900,
            const std::string& title = "Round Pong");
 
     /**
