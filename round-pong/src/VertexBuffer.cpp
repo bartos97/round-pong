@@ -10,10 +10,12 @@ VertexBuffer::VertexBuffer(unsigned int size, const void* data, GLenum usagePatt
 void VertexBuffer::bind() const
 {
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
+    RP_LOG("VertexBuffer #%d is now bound", m_id);
 }
 
 
 void VertexBuffer::unbindAll()
 {
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    RP_LOG("No VertexBuffer bound.");
 }

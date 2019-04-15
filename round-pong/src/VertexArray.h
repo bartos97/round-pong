@@ -24,5 +24,6 @@ private:
     unsigned int m_id;
     const VertexBuffer* m_vertexBuffer;
     const ElementBuffer* m_elementBuffer;
+    static const VertexArray* m_currentlyBound;
 };
 

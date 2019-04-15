@@ -10,12 +10,14 @@ ElementBuffer::ElementBuffer(unsigned int count, const unsigned int* data, GLenu
 void ElementBuffer::bind() const
 {
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
+    RP_LOG("ElementBuffer #%d is now bound", m_id);
 }
 
 
 void ElementBuffer::unbindAll()
 {
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    RP_LOG("No ElementBuffer bound.");
 }
 
 unsigned int ElementBuffer::getCount() const

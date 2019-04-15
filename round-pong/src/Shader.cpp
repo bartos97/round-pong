@@ -4,6 +4,9 @@
 #include <sstream>
 
 
+const Shader* Shader::m_currentlyBound = nullptr;
+
+
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
     : m_id(0)
 {
@@ -11,6 +14,8 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
     std::string fragmentStr;
     readFiles(vertexShaderPath, fragmentShaderPath, vertexStr, fragmentStr);
     createShaderProgram(vertexStr, fragmentStr);
+    Shader::m_currentlyBound = this;
+    RP_LOG("Created Shader #%d", m_id);
 }
 
 
@@ -23,13 +28,20 @@ Shader::~Shader()
 
 void Shader::bind() const
 {
-    GL_CALL(glUseProgram(m_id));
+    if (Shader::m_currentlyBound != this)
+    {
+        GL_CALL(glUseProgram(m_id));
+        Shader::m_currentlyBound = this;
+        RP_LOG("Shader #%d is now bound", m_id);
+    }
 }
 
 
 void Shader::unbind() const
 {
     GL_CALL(glUseProgram(0));
+    Shader::m_currentlyBound = nullptr;
+    RP_LOG("No Shader bound.");
 }
 
 

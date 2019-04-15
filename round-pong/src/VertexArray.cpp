@@ -2,21 +2,23 @@
 #include "VertexArray.h"
 
 
+const VertexArray* VertexArray::m_currentlyBound = nullptr;
+
+
 VertexArray::VertexArray()
     : m_vertexBuffer(nullptr), m_elementBuffer(nullptr)
 {
     GL_CALL(glGenVertexArrays(1, &m_id));
     GL_CALL(glBindVertexArray(m_id));
+    VertexArray::m_currentlyBound = this;
+    RP_LOG("Created VertexArray #%d", m_id);
 }
 
 VertexArray::VertexArray(const VertexBuffer & vb, const ElementBuffer & eb, const BufferLayout & layout)
+    : VertexArray()
 {
     m_vertexBuffer = &vb;
     m_elementBuffer = &eb;
-
-    GL_CALL(glGenVertexArrays(1, &m_id));
-    GL_CALL(glBindVertexArray(m_id));
-
     addBuffer(vb, layout);
     addBuffer(eb);
 }
@@ -31,13 +33,20 @@ VertexArray::~VertexArray()
 
 void VertexArray::bind() const
 {
-    GL_CALL(glBindVertexArray(m_id));
+    if (this != VertexArray::m_currentlyBound)
+    {
+        GL_CALL(glBindVertexArray(m_id));
+        VertexArray::m_currentlyBound = this;
+        RP_LOG("VertexArray #%d is now bound", m_id);
+    }
 }
 
 
 void VertexArray::unbind() const
 {
     GL_CALL(glBindVertexArray(0));
+    RP_LOG("No VertexArray bound.");
+    VertexArray::m_currentlyBound = nullptr;
 }
 
 

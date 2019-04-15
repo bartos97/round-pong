@@ -19,6 +19,7 @@ public:
 
 private:
     unsigned int m_id;
+    static const Shader* m_currentlyBound;
 
     void readFiles(const char* vertexShaderPath,
                    const char* fragmentShaderPath,
