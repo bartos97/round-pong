@@ -14,7 +14,6 @@ Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
     std::string fragmentStr;
     readFiles(vertexShaderPath, fragmentShaderPath, vertexStr, fragmentStr);
     createShaderProgram(vertexStr, fragmentStr);
-    Shader::m_currentlyBound = this;
     RP_LOG("Created Shader #%d", m_id);
 }
 
