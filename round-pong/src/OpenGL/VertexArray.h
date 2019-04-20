@@ -1,7 +1,7 @@
 #pragma once
-#include "BufferLayout.h"
-#include "VertexBuffer.h"
-#include "ElementBuffer.h"
+#include "OpenGL/BufferLayout.h"
+#include "OpenGL/VertexBuffer.h"
+#include "OpenGL/ElementBuffer.h"
 
 
 class VertexArray

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "VertexArray.h"
-#include "Shader.h"
+#include "OpenGL/VertexArray.h"
+#include "OpenGL/Shader.h"
 
 
 class Renderer

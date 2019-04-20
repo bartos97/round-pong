@@ -1,5 +1,5 @@
 #pragma once
-#include "GLbuffer.h"
+#include "OpenGL/GLbuffer.h"
 
 class ElementBuffer : public GLbuffer
 {

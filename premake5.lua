@@ -43,8 +43,10 @@ project "round-pong"
 
 	-- Source code files in the project
 	files {
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/*",
+		"%{prj.name}/src/Events/*",
+		"%{prj.name}/src/Shaders/*",
+		"%{prj.name}/src/OpenGL/*",
 	}
 
 	-- Include file search paths for the compiler.
