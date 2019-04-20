@@ -44,24 +44,6 @@ void Shader::unbind() const
 }
 
 
-void Shader::setUniform(const std::string& name, float x, float y, float z, float w)
-{
-    int location = glGetUniformLocation(m_id, name.c_str());
-    glUniform4f(location, x, y, z, w);
-}
-
-void Shader::setUniform(const std::string& name, float x, float y, float z)
-{
-    int location = glGetUniformLocation(m_id, name.c_str());
-    glUniform3f(location, x, y, z);
-}
-
-void Shader::setUniform(const std::string& name, float x, float y)
-{
-    int location = glGetUniformLocation(m_id, name.c_str());
-    glUniform2f(location, x, y);
-}
-
 void Shader::setUniform(const std::string& name, float x)
 {
     int location = glGetUniformLocation(m_id, name.c_str());
@@ -78,6 +60,51 @@ void Shader::setUniform(const std::string& name, int x)
 {
     int location = glGetUniformLocation(m_id, name.c_str());
     glUniform1i(location, x);
+}
+
+void Shader::setUniform(const std::string& name, float x, float y, float z, float w)
+{
+    int location = glGetUniformLocation(m_id, name.c_str());
+    glUniform4f(location, x, y, z, w);
+}
+
+void Shader::setUniform(const std::string& name, const glm::vec4& vec)
+{
+    setUniform(name, vec.x, vec.y, vec.z, vec.w);
+}
+
+void Shader::setUniform(const std::string& name, float x, float y, float z)
+{
+    int location = glGetUniformLocation(m_id, name.c_str());
+    glUniform3f(location, x, y, z);
+}
+
+void Shader::setUniform(const std::string& name, const glm::vec3& vec)
+{
+    setUniform(name, vec.x, vec.y, vec.z);
+}
+
+void Shader::setUniform(const std::string& name, float x, float y)
+{
+    int location = glGetUniformLocation(m_id, name.c_str());
+    glUniform2f(location, x, y);
+}
+
+void Shader::setUniform(const std::string& name, const glm::vec2& vec)
+{
+    setUniform(name, vec.x, vec.y);
+}
+
+void Shader::setUniform(const std::string& name, const glm::mat4& mat)
+{
+    int location = glGetUniformLocation(m_id, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setUniform(const std::string& name, const glm::mat3& mat)
+{
+    int location = glGetUniformLocation(m_id, name.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 

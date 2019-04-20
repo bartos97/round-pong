@@ -53,7 +53,8 @@ project "round-pong"
 	includedirs {
 		"%{prj.name}/src",
 		"%{includePaths.GLFW}",
-		"%{includePaths.Glad}"
+		"%{includePaths.Glad}",
+		"%{prj.name}/vendor/glm"
 	}
 
 	-- List of libraries and projects to link against.

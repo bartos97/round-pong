@@ -10,12 +10,21 @@ public:
     void bind() const;
     void unbind() const;
 
-    void setUniform(const std::string& name, float x, float y, float z, float w);
-    void setUniform(const std::string& name, float x, float y, float z);
-    void setUniform(const std::string& name, float x, float y);
     void setUniform(const std::string& name, float x);
     void setUniform(const std::string& name, bool x);
     void setUniform(const std::string& name, int x);
+
+    void setUniform(const std::string& name, float x, float y, float z, float w);
+    void setUniform(const std::string& name, const glm::vec4& vec);
+
+    void setUniform(const std::string& name, float x, float y, float z);
+    void setUniform(const std::string& name, const glm::vec3& vec);
+
+    void setUniform(const std::string& name, float x, float y);
+    void setUniform(const std::string& name, const glm::vec2& vec);
+
+    void setUniform(const std::string& name, const glm::mat4& mat);
+    void setUniform(const std::string& name, const glm::mat3& mat);
 
 private:
     unsigned int m_id;
