@@ -17,15 +17,15 @@ public:
     ~Window();
 
 private:
-    Window(int width = 900,
-           int height = 900,
-           const std::string& title = "Round Pong");
+    Window(int width, int height, const std::string& title);
 
     /**
      * Object initialization function 
      * @return Pointer to (only) instance of this class
      */
-    static Window* create();
+    static Window* create(int width = 800,
+                          int height = 800,
+                          const std::string& title = "Round Pong");
 
     /**
      * Function to call every frame refresh
@@ -43,9 +43,14 @@ private:
      */
     struct WindowData
     {
-        unsigned int width;
+        //current window size
+        unsigned int width; 
         unsigned int height;
         std::string  title;
+
+        //width and height of application viewport
+        unsigned int appSideLength;
+
         // these functions ought to be bind in Application
         std::function<void(WindowCloseEvent&)>          callbackOnWindowClose;
         std::function<void(WindowResizeEvent&)>         callbackOnWindowResize;

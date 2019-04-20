@@ -20,6 +20,8 @@ Window::Window(int width, int height, const std::string& title)
     m_data.height = height;
     m_data.title = title;
 
+    m_data.appSideLength = (width > height ? height : width);
+
     initGLFW();
     createWindow();
     initGlad();
@@ -27,11 +29,11 @@ Window::Window(int width, int height, const std::string& title)
 }
 
 
-Window* Window::create()
+Window* Window::create(int width, int height, const std::string& title)
 {
     if (!Window::m_instance)
     {
-        Window::m_instance = new Window();
+        Window::m_instance = new Window(width, height, title);
     }
     return Window::m_instance;
 }
@@ -70,17 +72,12 @@ void Window::createWindow()
 {
     RP_LOG("Creating window: %dx%d %s", m_data.width, m_data.height, m_data.title.c_str());
 
-#ifdef RP_FULLSCREEN
-    m_window = glfwCreateWindow(1600, 900, m_data.title.c_str(), glfwGetPrimaryMonitor(), nullptr);
-#else
     m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
-#endif // RP_FULLSCREEN
-
     RP_ASSERT(m_window, "GLFW window creation fail.");
 
     glfwMakeContextCurrent(m_window);
 
-    // associate window data with GLFW window
+    // associate window data (m_data) with GLFW window (m_window)
     glfwSetWindowUserPointer(m_window, &m_data);
 }
 
@@ -164,6 +161,14 @@ void Window::setCallbacks()
     
     // Frame buffer resize callback
     glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
-        glViewport(0, 0, width, height);
+        WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
+        int lowerLeftX, lowerLeftY;
+
+        dataPtr->appSideLength = (width > height ? height : width);
+        lowerLeftX = (width - dataPtr->appSideLength) / 2;
+        lowerLeftY = (height - dataPtr->appSideLength) / 2;
+
+        RP_LOG("Frame buffer resize: x = %d, y = %d", lowerLeftX, lowerLeftY);
+        glViewport(lowerLeftX, lowerLeftY, dataPtr->appSideLength, dataPtr->appSideLength);
     });
 }
