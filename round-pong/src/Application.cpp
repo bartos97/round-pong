@@ -40,17 +40,21 @@ void Application::run()
 {
     RP_LOG("App starts running.");
 
-    Player::generateModel();
+    PlayerModel::generateModel();
 
-    VertexBuffer playerVertexBuffer(unsigned int(Player::getVertices().size() * sizeof(float)), Player::getVertices().data());
-    ElementBuffer playerElementBuffer(unsigned int(Player::getIndecies().size()), Player::getIndecies().data());
+    VertexBuffer playerVertexBuffer(unsigned int(PlayerModel::getVertices().size() * sizeof(float)), 
+                                    PlayerModel::getVertices().data());
+
+    ElementBuffer playerElementBuffer(unsigned int(PlayerModel::getIndecies().size()), 
+                                      PlayerModel::getIndecies().data());
     BufferLayout playerLayout;
-    playerLayout.add<float>(2);
+    playerLayout.add<float>(2); //2D vertices
 
     auto playerShaderPtr = std::make_shared<Shader>("src/Shaders/player.vert", "src/Shaders/player.frag");
     auto playerVertexArrayPtr = std::make_shared<VertexArray>(playerVertexBuffer, playerElementBuffer, playerLayout);
-    m_userPlayer = std::unique_ptr<Player>(new Player(playerShaderPtr, playerVertexArrayPtr, 0.0));
-    m_opponentPlayer = std::unique_ptr<Player>(new Player(playerShaderPtr, playerVertexArrayPtr, M_PI));
+
+    m_userPlayer = std::make_unique<Player>(playerShaderPtr, playerVertexArrayPtr, 0.0);
+    m_opponentPlayer = std::make_unique<Player>(playerShaderPtr, playerVertexArrayPtr, M_PI);
 
     RP_LOG("Entering the game loop");
     while (m_isRunning)
@@ -106,14 +110,13 @@ void Application::onMouseMove(MouseMoveEvent & e)
 {
     RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", e.getX(), e.getY());
 
-    const static double maxangle = M_PI / 2.0 - Player::modelSizeAngle / 2.0;
-
     // x and y with respect to center of a window
     double mouseY = m_window->m_data.height - e.getY() - m_window->m_data.windowCenterY;
     double mouseX = e.getX() - m_window->m_data.windowCenterX;
     double angle = (float)glm::atan(mouseY / mouseX);
 
-    if (mouseX > 0.0 && angle < maxangle && angle > -maxangle)
+    
+    if (mouseX > 0.0 && angle < PlayerModel::maxPositionAngle && angle > PlayerModel::minPositionAngle)
     {
         m_userPlayer->setPosition(angle);
     }

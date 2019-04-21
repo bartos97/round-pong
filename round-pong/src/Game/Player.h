@@ -1,5 +1,7 @@
 #pragma once
 #include "Renderer.h"
+#include "PlayerModel.h"
+
 
 class Player
 {
@@ -9,21 +11,8 @@ public:
     void setPosition(double angle);
     void render();
 
-public:
-    static void generateModel();
-    static std::vector<float>& getVertices();
-    static std::vector<unsigned int>& getIndecies();
-    static const double modelThickness;
-    static const double modelSizeAngle;
 
-private:
-    static bool isModelGenerated;
-    static std::vector<float> modelVertices;
-    static std::vector<unsigned int> modelIndecies;
-
-    static glm::mat4 identityMat4;
-    static glm::vec3 rotationUnitVector;
-    
+private:    
     std::shared_ptr<Shader> m_modelShader;
     std::shared_ptr<VertexArray> m_modelVertexArray;
 
