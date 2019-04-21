@@ -4,6 +4,7 @@
 #include "Events/WindowEvents.h"
 #include "Events/KeyEvents.h"
 #include "Events/MouseEvents.h"
+#include "Game/Player.h"
 
 
 #define APP_BIND_EVENT(eventName) \
@@ -47,5 +48,8 @@ private:
     bool m_isRunning;
     static Application* m_instance;
     std::unique_ptr<Window> m_window;
+
+    std::unique_ptr<Player> m_userPlayer;
+    std::unique_ptr<Player> m_opponentPlayer;
 };
 

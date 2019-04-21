@@ -12,6 +12,7 @@
 #include <memory>
 #include <functional>
 #include <utility>
+#include <cmath>
 
 #include "Core.h"
 #include "Log.h"

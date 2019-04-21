@@ -16,10 +16,13 @@ Window::~Window()
 
 Window::Window(int width, int height, const std::string& title)
 {
+    m_window = nullptr;
     m_data.width = width;
     m_data.height = height;
     m_data.title = title;
 
+    m_data.windowCenterX = width / 2.0;
+    m_data.windowCenterY = height / 2.0;
     m_data.appSideLength = (width > height ? height : width);
 
     initGLFW();
@@ -98,6 +101,8 @@ void Window::setCallbacks()
         WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
         dataPtr->width = width;
         dataPtr->height = height;
+        dataPtr->windowCenterX = width / 2.0;
+        dataPtr->windowCenterY = height / 2.0;
 
         WindowResizeEvent event(width, height);
         dataPtr->callbackOnWindowResize(event);

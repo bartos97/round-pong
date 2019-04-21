@@ -14,8 +14,15 @@ VertexArray::VertexArray()
     RP_LOG("Created VertexArray #%d", m_id);
 }
 
+
 VertexArray::VertexArray(const VertexBuffer & vb, const ElementBuffer & eb, const BufferLayout & layout)
     : VertexArray()
+{
+    assignData(vb, eb, layout);
+}
+
+
+void VertexArray::assignData(const VertexBuffer& vb, const ElementBuffer& eb, const BufferLayout& layout)
 {
     m_vertexBuffer = &vb;
     m_elementBuffer = &eb;

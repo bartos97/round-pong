@@ -43,13 +43,17 @@ private:
      */
     struct WindowData
     {
+        std::string  title;
+
         //current window size
         unsigned int width; 
         unsigned int height;
-        std::string  title;
 
         //width and height of application viewport
         unsigned int appSideLength;
+
+        double windowCenterX;
+        double windowCenterY;
 
         // these functions ought to be bind in Application
         std::function<void(WindowCloseEvent&)>          callbackOnWindowClose;

@@ -10,11 +10,16 @@ const Shader* Shader::m_currentlyBound = nullptr;
 Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath)
     : m_id(0)
 {
-    std::string vertexStr;
-    std::string fragmentStr;
-    readFiles(vertexShaderPath, fragmentShaderPath, vertexStr, fragmentStr);
-    createShaderProgram(vertexStr, fragmentStr);
-    RP_LOG("Created Shader #%d", m_id);
+    RP_LOG("Shader object constructed");
+    assignData(vertexShaderPath, fragmentShaderPath);
+    m_isDataAssigned = true;
+}
+
+
+Shader::Shader()
+    : m_isDataAssigned(false), m_id(0)
+{
+    RP_LOG("Shader object constructed without data assignment!");
 }
 
 
@@ -25,8 +30,20 @@ Shader::~Shader()
 }
 
 
+void Shader::assignData(const char* vertexShaderPath, const char* fragmentShaderPath)
+{
+    std::string vertexStr;
+    std::string fragmentStr;
+    readFiles(vertexShaderPath, fragmentShaderPath, vertexStr, fragmentStr);
+    createShaderProgram(vertexStr, fragmentStr);
+    m_isDataAssigned = true;
+    RP_LOG("Shader #%d data assigned", m_id);
+}
+
+
 void Shader::bind() const
 {
+    RP_ASSERT(m_isDataAssigned, "Tring to bind Shader without data assigned!");
     if (Shader::m_currentlyBound != this)
     {
         GL_CALL(glUseProgram(m_id));

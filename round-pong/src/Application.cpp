@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "Application.h"
-#include "Renderer.h"
-#include <cmath>
 
 
 // Declaration of static variable
@@ -11,7 +9,7 @@ Application* Application::m_instance;
 Application::Application()
 {
     RP_LOG("Application constructed.");
-    m_window = std::unique_ptr<Window>(Window::create());
+    m_window = std::unique_ptr<Window>(Window::create(1200, 1200));
 
     APP_BIND_EVENT(WindowClose);
     APP_BIND_EVENT(WindowResize);
@@ -40,81 +38,31 @@ Application * Application::create()
 
 void Application::run()
 {
-    RP_LOG("App starts running.");    
+    RP_LOG("App starts running.");
 
-    const double radius = 0.9;
-    const double radius2 = radius + (1.0 / 16.0);
-    const unsigned int numOfSegments = 32;
-    const double angle = M_PI / 6.0;
-    const double angleInc = angle / static_cast<double>(numOfSegments);
+    Player::generateModel();
 
-    std::vector<float> arcVertices;
-    arcVertices.reserve((numOfSegments + 1) * 2 * 2);
+    VertexBuffer playerVertexBuffer(unsigned int(Player::getVertices().size() * sizeof(float)), Player::getVertices().data());
+    ElementBuffer playerElementBuffer(unsigned int(Player::getIndecies().size()), Player::getIndecies().data());
+    BufferLayout playerLayout;
+    playerLayout.add<float>(2);
 
-    std::vector<unsigned int> arcIndecies;
-    arcIndecies.reserve(numOfSegments * 6);
+    auto playerShaderPtr = std::make_shared<Shader>("src/Shaders/player.vert", "src/Shaders/player.frag");
+    auto playerVertexArrayPtr = std::make_shared<VertexArray>(playerVertexBuffer, playerElementBuffer, playerLayout);
+    m_userPlayer = std::unique_ptr<Player>(new Player(playerShaderPtr, playerVertexArrayPtr, 0.0));
+    m_opponentPlayer = std::unique_ptr<Player>(new Player(playerShaderPtr, playerVertexArrayPtr, M_PI));
 
-    double startAngle = 0.0;
-    float tmpX, tmpY;
-    double tmpSin, tmpCos;
-
-    for (unsigned int i = 0; i < numOfSegments + 1; i++)
-    {
-        tmpCos = std::cos(startAngle);
-        tmpSin = std::sin(startAngle);
-
-        tmpX = static_cast<float>(tmpCos * radius);
-        tmpY = static_cast<float>(tmpSin * radius);
-        arcVertices.push_back(tmpX);
-        arcVertices.push_back(tmpY);
-
-        tmpX = static_cast<float>(tmpCos * radius2);
-        tmpY = static_cast<float>(tmpSin * radius2);
-        arcVertices.push_back(tmpX);
-        arcVertices.push_back(tmpY);        
-
-        startAngle += angleInc;
-    }
-
-    for (unsigned int i = 0; i < numOfSegments * 2; i++)
-    {
-        arcIndecies.push_back(i);
-        arcIndecies.push_back(i + 1);
-        arcIndecies.push_back(i + 2);
-    }
-
-    Shader shader("src/Shaders/test.vert", "src/Shaders/test.frag");
-
-    VertexBuffer vb(unsigned int(arcVertices.size() * sizeof(float)), arcVertices.data());
-    ElementBuffer eb(unsigned int(arcIndecies.size()), arcIndecies.data());
-
-    BufferLayout layout;
-    layout.add<float>(2); //position
-
-    VertexArray va(vb, eb, layout);
-    Renderer renderer;
-
-    va.unbind();
-    vb.unbindAll();
-    eb.unbindAll();
-
-    const float INC = 1.0f / 256.0f;
-    float i = INC;
-    float r = i;
-
+    RP_LOG("Entering the game loop");
     while (m_isRunning)
     {
-        renderer.clearScreen();
+        Renderer::clearScreen();
 
-        if (r >= 1.0f) i = -INC;
-        else if (r <= 0.0f) i = INC;
-        r += i;
-
-        shader.setUniform("uniformColor", r, 0.5f, 0.1f, 1.0f);
-        renderer.draw(va, shader);
+        m_userPlayer->render();
+        m_opponentPlayer->render();
 
         m_window->onUpdate();
     }
+    RP_LOG("Returned from game loop");
 }
 
 
@@ -157,6 +105,19 @@ void Application::onKeyRelease(KeyReleaseEvent & e)
 void Application::onMouseMove(MouseMoveEvent & e)
 {
     RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", e.getX(), e.getY());
+
+    const static double maxangle = M_PI / 2.0 - Player::modelSizeAngle / 2.0;
+
+    // x and y with respect to center of a window
+    double mouseY = m_window->m_data.height - e.getY() - m_window->m_data.windowCenterY;
+    double mouseX = e.getX() - m_window->m_data.windowCenterX;
+    double angle = (float)glm::atan(mouseY / mouseX);
+
+    if (mouseX > 0.0 && angle < maxangle && angle > -maxangle)
+    {
+        m_userPlayer->setPosition(angle);
+    }
+
     e.m_isHandled = true;
 }
 

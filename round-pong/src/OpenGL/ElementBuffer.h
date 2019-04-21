@@ -12,6 +12,9 @@ public:
      * by default it is GL_STATIC_DRAW
      */
     ElementBuffer(unsigned int count, const unsigned int* data, GLenum usagePattern = GL_STATIC_DRAW);
+    ElementBuffer();
+
+    virtual void assignData(unsigned int count, const void* data, GLenum usagePattern = GL_STATIC_DRAW) override;
 
     virtual void bind() const override;
     static void unbindAll();

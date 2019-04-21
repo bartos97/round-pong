@@ -5,7 +5,11 @@ class Shader
 {
 public:
     Shader(const char* vertexShaderPath, const char* fragmentShaderPath);
+    Shader();
+
     ~Shader();
+
+    void assignData(const char* vertexShaderPath, const char* fragmentShaderPath);
 
     void bind() const;
     void unbind() const;
@@ -27,8 +31,9 @@ public:
     void setUniform(const std::string& name, const glm::mat3& mat);
 
 private:
-    unsigned int m_id;
     static const Shader* m_currentlyBound;
+    unsigned int m_id;
+    bool m_isDataAssigned;
 
     void readFiles(const char* vertexShaderPath,
                    const char* fragmentShaderPath,

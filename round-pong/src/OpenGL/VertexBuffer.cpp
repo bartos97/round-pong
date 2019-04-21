@@ -7,8 +7,15 @@ VertexBuffer::VertexBuffer(unsigned int size, const void* data, GLenum usagePatt
 {}
 
 
+void VertexBuffer::assignData(unsigned int size, const void* data, GLenum usagePattern)
+{
+    assignDataGeneral(GL_ARRAY_BUFFER, size, data, usagePattern);
+}
+
+
 void VertexBuffer::bind() const
 {
+    RP_ASSERT(m_isDataAssigned, "Tring to bind VertexBuffer without data assigned!");
     GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
     RP_LOG("VertexBuffer #%d is now bound", m_id);
 }
