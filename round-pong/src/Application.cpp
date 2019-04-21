@@ -40,21 +40,30 @@ void Application::run()
 {
     RP_LOG("App starts running.");
 
-    PlayerModel::generateModel();
+    auto basicShaderPtr = std::make_shared<Shader>("src/Shaders/player.vert", "src/Shaders/player.frag");
+    BufferLayout layoutVertices2D;
+    layoutVertices2D.add<float>(2);
 
+    PlayerModel::generateModel();
+    BallModel::generateModel();
+
+    auto playerVertexArrayPtr = std::make_shared<VertexArray>();
     VertexBuffer playerVertexBuffer(unsigned int(PlayerModel::getVertices().size() * sizeof(float)), 
                                     PlayerModel::getVertices().data());
-
     ElementBuffer playerElementBuffer(unsigned int(PlayerModel::getIndecies().size()), 
                                       PlayerModel::getIndecies().data());
-    BufferLayout playerLayout;
-    playerLayout.add<float>(2); //2D vertices
+    playerVertexArrayPtr.get()->assignData(playerVertexBuffer, playerElementBuffer, layoutVertices2D);
 
-    auto playerShaderPtr = std::make_shared<Shader>("src/Shaders/player.vert", "src/Shaders/player.frag");
-    auto playerVertexArrayPtr = std::make_shared<VertexArray>(playerVertexBuffer, playerElementBuffer, playerLayout);
+    auto ballVertexArrayPtr = std::make_shared<VertexArray>();
+    VertexBuffer ballVertexBuffer(unsigned int(BallModel::getVertices().size() * sizeof(float)), 
+                                  BallModel::getVertices().data());
+    ElementBuffer ballElementBuffer(unsigned int(BallModel::getIndecies().size()), 
+                                    BallModel::getIndecies().data());
+    ballVertexArrayPtr.get()->assignData(ballVertexBuffer, ballElementBuffer, layoutVertices2D);
 
-    m_userPlayer = std::make_unique<Player>(playerShaderPtr, playerVertexArrayPtr, 0.0);
-    m_opponentPlayer = std::make_unique<Player>(playerShaderPtr, playerVertexArrayPtr, M_PI);
+    m_userPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, 0.0);
+    m_opponentPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, M_PI);
+    m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr);
 
     RP_LOG("Entering the game loop");
     while (m_isRunning)
@@ -63,6 +72,7 @@ void Application::run()
 
         m_userPlayer->render();
         m_opponentPlayer->render();
+        m_gameBall->render();
 
         m_window->onUpdate();
     }

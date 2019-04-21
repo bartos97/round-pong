@@ -3,7 +3,7 @@
 
 
 bool PlayerModel::isModelGenerated = false;
-const double PlayerModel::modelThickness = 0.09;
+const double PlayerModel::modelThickness = 0.15;
 const double PlayerModel::modelSizeAngle = M_PI / 6.0;
 
 //Highest available position: 90deg - half the size of modelSizeAngle
@@ -23,7 +23,7 @@ void PlayerModel::generateModel()
     if (isModelGenerated) return;
     RP_LOG("Generating triangles for player");
 
-    const double segmentSizeAngle = M_PI / 32.0;
+    const double segmentSizeAngle = M_PI / 48.0;
     const size_t numOfSegments = static_cast<size_t>(std::ceil(modelSizeAngle / segmentSizeAngle));
     const double outerRadius = 0.99;
     const double innerRadius = outerRadius - modelThickness;

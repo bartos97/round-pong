@@ -44,7 +44,7 @@ void VertexArray::bind() const
     {
         GL_CALL(glBindVertexArray(m_id));
         VertexArray::m_currentlyBound = this;
-        RP_LOG("VertexArray #%d is now bound", m_id);
+        //RP_LOG("VertexArray #%d is now bound", m_id);
     }
 }
 

@@ -11,7 +11,6 @@ public:
     void setPosition(double angle);
     void render();
 
-
 private:    
     std::shared_ptr<Shader> m_modelShader;
     std::shared_ptr<VertexArray> m_modelVertexArray;

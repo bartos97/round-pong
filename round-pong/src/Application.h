@@ -5,6 +5,7 @@
 #include "Events/KeyEvents.h"
 #include "Events/MouseEvents.h"
 #include "Game/Player.h"
+#include "Game/Ball.h"
 
 
 #define APP_BIND_EVENT(eventName) \
@@ -51,5 +52,6 @@ private:
 
     std::unique_ptr<Player> m_userPlayer;
     std::unique_ptr<Player> m_opponentPlayer;
+    std::unique_ptr<Ball> m_gameBall;
 };
 
