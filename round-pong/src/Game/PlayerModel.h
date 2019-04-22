@@ -14,6 +14,7 @@ public:
     static const double modelSizeAngle;
     static const double minPositionAngle;
     static const double maxPositionAngle;
+    static const double innerRadius;
 
     static const glm::mat4 identityMat4;
     static const glm::vec3 rotationUnitVector;

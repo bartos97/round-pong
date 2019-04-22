@@ -40,7 +40,7 @@ void Application::run()
 {
     RP_LOG("App starts running.");
 
-    auto basicShaderPtr = std::make_shared<Shader>("src/Shaders/player.vert", "src/Shaders/player.frag");
+    auto basicShaderPtr = std::make_shared<Shader>("src/Shaders/basic.vert", "src/Shaders/basic.frag");
     BufferLayout layoutVertices2D;
     layoutVertices2D.add<float>(2);
 
@@ -63,7 +63,7 @@ void Application::run()
 
     m_userPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, 0.0);
     m_opponentPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, M_PI);
-    m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr);
+    m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr, glm::vec2(0.0f, 0.0f));
 
     RP_LOG("Entering the game loop");
     while (m_isRunning)
@@ -118,17 +118,21 @@ void Application::onKeyRelease(KeyReleaseEvent & e)
 
 void Application::onMouseMove(MouseMoveEvent & e)
 {
-    RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", e.getX(), e.getY());
-
-    // x and y with respect to center of a window
-    double mouseY = m_window->m_data.height - e.getY() - m_window->m_data.windowCenterY;
-    double mouseX = e.getX() - m_window->m_data.windowCenterX;
+    // position with respect to center of window
+    double mouseY = m_window->m_data.windowCenterY - e.getY();
+    double mouseX = e.getX() - m_window->m_data.windowCenterX;    
     double angle = (float)glm::atan(mouseY / mouseX);
-
     
+    //x and y in normalized device coordinates
+    mouseX = mouseX / m_window->m_data.windowCenterX;
+    mouseY = mouseY / m_window->m_data.windowCenterY;
+    m_gameBall->moveTo(glm::vec2(mouseX, mouseY));
+    RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", mouseX, mouseY);
+
     if (mouseX > 0.0 && angle < PlayerModel::maxPositionAngle && angle > PlayerModel::minPositionAngle)
     {
         m_userPlayer->setPosition(angle);
+
     }
 
     e.m_isHandled = true;

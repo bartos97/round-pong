@@ -3,8 +3,9 @@
 
 
 bool PlayerModel::isModelGenerated = false;
-const double PlayerModel::modelThickness = 0.15;
+const double PlayerModel::modelThickness = 0.14;
 const double PlayerModel::modelSizeAngle = M_PI / 6.0;
+const double PlayerModel::innerRadius = 0.85;
 
 //Highest available position: 90deg - half the size of modelSizeAngle
 const double PlayerModel::maxPositionAngle = M_PI * (5.0 / 12.0);
@@ -25,8 +26,7 @@ void PlayerModel::generateModel()
 
     const double segmentSizeAngle = M_PI / 48.0;
     const size_t numOfSegments = static_cast<size_t>(std::ceil(modelSizeAngle / segmentSizeAngle));
-    const double outerRadius = 0.99;
-    const double innerRadius = outerRadius - modelThickness;
+    const double outerRadius = innerRadius + modelThickness;
     const double angleInc = modelSizeAngle / static_cast<double>(numOfSegments);
 
     modelVertices.reserve((numOfSegments + 1) * 2 * 2);

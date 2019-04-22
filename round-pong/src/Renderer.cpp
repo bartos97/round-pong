@@ -5,6 +5,7 @@ void Renderer::draw(const VertexArray & va, const Shader & shader)
 {
     va.bind();
     shader.bind();
+    GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     GL_CALL(glDrawElements(GL_TRIANGLES, va.getElementBuffer().getCount(), GL_UNSIGNED_INT, 0));
 }
 
@@ -13,6 +14,7 @@ void Renderer::draw(std::shared_ptr<VertexArray> va, std::shared_ptr<Shader> sha
 {
     va.get()->bind();
     shader.get()->bind();
+    GL_CALL(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     GL_CALL(glDrawElements(GL_TRIANGLES, va.get()->getElementBuffer().getCount(), GL_UNSIGNED_INT, 0));
 }
 
