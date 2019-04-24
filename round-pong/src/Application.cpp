@@ -9,7 +9,7 @@ Application* Application::m_instance;
 Application::Application()
 {
     RP_LOG("Application constructed.");
-    m_window = std::unique_ptr<Window>(Window::create(800, 800));
+    m_window = std::unique_ptr<Window>(Window::create());
 
     APP_BIND_EVENT(WindowClose);
     APP_BIND_EVENT(WindowResize);

@@ -17,15 +17,21 @@ public:
     ~Window();
 
 private:
-    Window(int width, int height, const std::string& title);
+    struct DEFAULTS
+    {
+        static const int windowSize;
+        static const char* title;
+    };
+
+    Window(const char* title, int width, int height);
 
     /**
      * Object initialization function 
      * @return Pointer to (only) instance of this class
      */
-    static Window* create(int width = 800,
-                          int height = 800,
-                          const std::string& title = "Round Pong");
+    static Window* create(const char* title = DEFAULTS::title, 
+                          int width = DEFAULTS::windowSize,
+                          int height = DEFAULTS::windowSize);
 
     /**
      * Function to call every frame refresh
@@ -35,7 +41,7 @@ private:
     inline void initGLFW();
     inline void initGlad();
     inline void createWindow();
-    inline void setCallbacks();    
+    inline void setCallbacks(); 
   
     /** 
      * Basic informations about window and pointers to callback functions for events.

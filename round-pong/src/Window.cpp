@@ -5,6 +5,8 @@
 
 // Declaration of static variable (nullptr by default)
 Window* Window::m_instance;
+const char* Window::DEFAULTS::title = "Round Pong";
+const int Window::DEFAULTS::windowSize = 800;
 
 
 Window::~Window()
@@ -14,7 +16,7 @@ Window::~Window()
 }
 
 
-Window::Window(int width, int height, const std::string& title)
+Window::Window(const char* title, int width, int height)
 {
     m_window = nullptr;
     m_data.width = width;
@@ -32,11 +34,11 @@ Window::Window(int width, int height, const std::string& title)
 }
 
 
-Window* Window::create(int width, int height, const std::string& title)
+Window* Window::create(const char* title, int width, int height)
 {
     if (!Window::m_instance)
     {
-        Window::m_instance = new Window(width, height, title);
+        Window::m_instance = new Window(title, width, height);
     }
     return Window::m_instance;
 }
@@ -74,8 +76,16 @@ void Window::initGlad()
 
 void Window::createWindow()
 {
-    RP_LOG("Creating window: %dx%d %s", m_data.width, m_data.height, m_data.title.c_str());
+    if (m_data.width == DEFAULTS::windowSize || m_data.height == DEFAULTS::windowSize)
+    {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        m_data.height = mode->height - mode->height / 12;
+        m_data.width = m_data.height;
+        m_data.windowCenterX = m_data.width / 2.0;
+        m_data.windowCenterY = m_data.height / 2.0;
+    }
 
+    RP_LOG("Creating window: %dx%d %s", m_data.width, m_data.height, m_data.title.c_str());
     m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
     RP_ASSERT(m_window, "GLFW window creation fail.");
 
@@ -168,13 +178,13 @@ void Window::setCallbacks()
     });
     
     // Frame buffer resize callback
-    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
+    glfwSetFramebufferSizeCallback(m_window, [](GLFWwindow * window, int windowWidth, int windowHeight) {
         WindowData* dataPtr = (WindowData*)glfwGetWindowUserPointer(window);
         int lowerLeftX, lowerLeftY;
 
-        dataPtr->appSideLength = (width > height ? height : width);
-        lowerLeftX = (width - dataPtr->appSideLength) / 2;
-        lowerLeftY = (height - dataPtr->appSideLength) / 2;
+        dataPtr->appSideLength = (windowWidth > windowHeight ? windowHeight : windowWidth);
+        lowerLeftX = (windowWidth - dataPtr->appSideLength) / 2;
+        lowerLeftY = (windowHeight - dataPtr->appSideLength) / 2;
 
         RP_LOG("Frame buffer resize: x = %d, y = %d", lowerLeftX, lowerLeftY);
         glViewport(lowerLeftX, lowerLeftY, dataPtr->appSideLength, dataPtr->appSideLength);

@@ -14,7 +14,7 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
     RP_LOG("Ball created");
     m_modelShader = shader;
     m_modelVertexArray = va;
-    m_velocity = 2.0f / 150.0f;
+    m_velocity = 2.0f / 400.0f;
     m_position = startPos;
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
     m_transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, 0.0f));
