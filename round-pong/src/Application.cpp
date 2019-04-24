@@ -132,7 +132,6 @@ void Application::onMouseMove(MouseMoveEvent & e)
     if (mouseX > 0.0 && angle < PlayerModel::maxPositionAngle && angle > PlayerModel::minPositionAngle)
     {
         m_userPlayer->setPosition(angle);
-
     }
 
     e.m_isHandled = true;

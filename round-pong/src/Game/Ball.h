@@ -20,4 +20,6 @@ private:
     glm::vec2 m_position;
     glm::vec2 m_positionDisplacement;
     glm::mat4 m_transformMatrix;
+
+    glm::vec2 generateRandomVector();
 };
