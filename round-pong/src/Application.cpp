@@ -40,12 +40,15 @@ void Application::run()
 {
     RP_LOG("App starts running.");
 
-    auto basicShaderPtr = std::make_shared<Shader>("src/Shaders/basic.vert", "src/Shaders/basic.frag");
-    BufferLayout layoutVertices2D;
-    layoutVertices2D.add<float>(2);
-
     PlayerModel::generateModel();
     BallModel::generateModel();
+
+    std::string vertexShaderPath = Core::SRC_PATH + "Shaders\\basic.vert";
+    std::string fragmentShaderPath = Core::SRC_PATH + "Shaders\\basic.frag";
+    auto basicShaderPtr = std::make_shared<Shader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
+
+    BufferLayout layoutVertices2D;
+    layoutVertices2D.add<float>(2);
 
     auto playerVertexArrayPtr = std::make_shared<VertexArray>();
     VertexBuffer playerVertexBuffer(unsigned int(PlayerModel::getVertices().size() * sizeof(float)), 
@@ -118,7 +121,7 @@ void Application::onKeyRelease(KeyReleaseEvent & e)
 
 void Application::onMouseMove(MouseMoveEvent & e)
 {
-    // position with respect to center of window
+    // position (in px) with respect to center of window
     double mouseY = m_window->m_data.windowCenterY - e.getY();
     double mouseX = e.getX() - m_window->m_data.windowCenterX;    
     double angle = (float)glm::atan(mouseY / mouseX);
@@ -127,6 +130,7 @@ void Application::onMouseMove(MouseMoveEvent & e)
     mouseX = mouseX / m_window->m_data.windowCenterX;
     mouseY = mouseY / m_window->m_data.windowCenterY;
     m_gameBall->moveTo(glm::vec2(mouseX, mouseY));
+
     RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", mouseX, mouseY);
 
     if (mouseX > 0.0 && angle < PlayerModel::maxPositionAngle && angle > PlayerModel::minPositionAngle)

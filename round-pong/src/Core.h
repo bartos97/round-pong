@@ -10,3 +10,14 @@
 #ifdef RP_RELEASE
     //#define RP_FULLSCREEN
 #endif // RP_RELEASE
+
+
+class Core
+{
+public:
+    static const std::string SRC_PATH;
+
+private:
+    static std::string getSrcPath();
+};
+
