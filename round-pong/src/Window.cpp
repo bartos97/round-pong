@@ -57,6 +57,7 @@ void Window::initGLFW()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
     // sets V-Sync
     glfwSwapInterval(1);    
@@ -79,6 +80,8 @@ void Window::createWindow()
     RP_ASSERT(m_window, "GLFW window creation fail.");
 
     glfwMakeContextCurrent(m_window);
+    glfwSetWindowPos(m_window, 0, 50);
+    glfwShowWindow(m_window);
 
     // associate window data (m_data) with GLFW window (m_window)
     glfwSetWindowUserPointer(m_window, &m_data);
