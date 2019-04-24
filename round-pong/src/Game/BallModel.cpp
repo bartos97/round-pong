@@ -7,7 +7,7 @@ std::vector<unsigned int> BallModel::modelIndecies;
 
 bool BallModel::isModelGenerated = false;
 const double BallModel::radius = 0.075;
-const size_t BallModel::numOfTriangles = 24;
+const size_t BallModel::numOfTriangles = 32;
 
 
 void BallModel::generateModel()
