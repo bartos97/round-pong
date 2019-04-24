@@ -3,6 +3,9 @@
 #include <random>
 
 
+const glm::mat4 Ball::identityMat4 = glm::mat4(1.0f);
+
+
 Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, const glm::vec2& startPos)
 {
     if (!BallModel::isCreated())
@@ -11,7 +14,7 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
     RP_LOG("Ball created");
     m_modelShader = shader;
     m_modelVertexArray = va;
-    velocity = 2.0f / 150.0f;
+    m_velocity = 2.0f / 150.0f;
     m_position = startPos;
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
     m_transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, 0.0f));
@@ -19,17 +22,18 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
 }
 
 
-void Ball::setPosition(const glm::vec2& pos)
+void Ball::setPosition(const glm::vec2& newPosition)
 {
-    m_position = pos;
-    m_transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, 0.0f));
+    m_position = newPosition;
+    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
 }
 
 
-void Ball::moveTo(const glm::vec2& pos)
+void Ball::moveTo(const glm::vec2& newPosition)
 {
-    glm::vec2 moveVec(pos.x - m_position.x, pos.y - m_position.y);
-    m_positionDisplacement = moveVec * velocity;
+    glm::vec2 moveVec(newPosition.x - m_position.x, newPosition.y - m_position.y);
+    moveVec = moveVec / glm::distance(m_position, newPosition);
+    m_positionDisplacement = moveVec * m_velocity;
 }
 
 
