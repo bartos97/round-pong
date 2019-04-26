@@ -19,6 +19,13 @@ Application::Application()
     APP_BIND_EVENT(MouseButtonPress);
     APP_BIND_EVENT(MouseButtonRelease);
 
+#ifdef RP_DEBUG
+    Renderer::setMode(GL_LINE);
+#else
+    Renderer::setMode(GL_FILL);
+#endif // RP_DEBUG
+
+
     m_isRunning = true;
 }
 
@@ -43,8 +50,8 @@ void Application::run()
     PlayerModel::generateModel();
     BallModel::generateModel();
 
-    std::string vertexShaderPath = Core::SRC_PATH + "Shaders\\basic.vert";
-    std::string fragmentShaderPath = Core::SRC_PATH + "Shaders\\basic.frag";
+    std::string vertexShaderPath = Core::SRC_PATH + "Shaders/basic.vert";
+    std::string fragmentShaderPath = Core::SRC_PATH + "Shaders/basic.frag";
     auto basicShaderPtr = std::make_shared<Shader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 
     BufferLayout layoutVertices2D;
@@ -124,7 +131,7 @@ void Application::onMouseMove(MouseMoveEvent & e)
     // position (in px) with respect to center of window
     double mouseY = m_window->m_data.windowCenterY - e.getY();
     double mouseX = e.getX() - m_window->m_data.windowCenterX;    
-    double angle = (float)glm::atan(mouseY / mouseX);
+    double angle = std::atan2(mouseY, mouseX);
     
     //x and y in normalized device coordinates
     mouseX = mouseX / m_window->m_data.windowCenterX;
