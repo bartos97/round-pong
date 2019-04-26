@@ -9,6 +9,8 @@ public:
     Player(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, double startAngle);
     
     void setPosition(double angle);
+    void goUp();
+    void goDown();
     void render();
 
 private:    
@@ -16,6 +18,7 @@ private:
     std::shared_ptr<VertexArray> m_modelVertexArray;
 
     float m_rotationAngle;
+    float m_angleIncrement;
     glm::mat4 m_transformMatrix;
 };
 

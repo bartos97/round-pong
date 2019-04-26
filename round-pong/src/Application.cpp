@@ -109,10 +109,24 @@ void Application::onKeyPress(KeyPressEvent & e)
 {
     int code = e.getKeyCode();
     RP_EVENT_LOG(e, "Key #%d pressed, repeated %d", code, e.getRepeatState());
-
-    if (code == GLFW_KEY_ESCAPE)
+    
+    switch (code)
+    {
+    case GLFW_KEY_ESCAPE:
     {
         m_isRunning = false;
+        break;
+    }
+    case GLFW_KEY_UP:
+    {
+        m_userPlayer->goUp();
+        break;
+    }
+    case GLFW_KEY_DOWN:
+    {
+        m_userPlayer->goDown();
+        break;
+    }
     }
 
     e.m_isHandled = true;
@@ -128,12 +142,15 @@ void Application::onKeyRelease(KeyReleaseEvent & e)
 
 void Application::onMouseMove(MouseMoveEvent & e)
 {
-    // position (in px) with respect to center of window
+    // mouse position received from event are in coordinates system
+    // where origin is at window's top left corner, so
+    // position (in px) with respect to center of window wiil be:
     double mouseY = m_window->m_data.windowCenterY - e.getY();
-    double mouseX = e.getX() - m_window->m_data.windowCenterX;    
+    double mouseX = e.getX() - m_window->m_data.windowCenterX;   
+
     double angle = std::atan2(mouseY, mouseX);
     
-    //x and y in normalized device coordinates
+    //x and y in normalized device coordinates, i.e. [-1, 1]
     mouseX = mouseX / m_window->m_data.windowCenterX;
     mouseY = mouseY / m_window->m_data.windowCenterY;
     m_gameBall->moveTo(glm::vec2(mouseX, mouseY));
