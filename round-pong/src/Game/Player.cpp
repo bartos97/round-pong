@@ -24,9 +24,16 @@ void Player::setPosition(double angle)
 }
 
 
+void Player::setPosition(float angle)
+{
+    m_rotationAngle = angle;
+    m_transformMatrix = glm::rotate(PlayerModel::identityMat4, m_rotationAngle, PlayerModel::rotationUnitVector);
+}
+
+
 void Player::goUp()
 {
-    double newAngle = m_rotationAngle + m_angleIncrement;
+    float newAngle = m_rotationAngle + m_angleIncrement;
     if (newAngle < PlayerModel::maxPositionAngle)
     {
         setPosition(newAngle);
@@ -40,7 +47,7 @@ void Player::goUp()
 
 void Player::goDown()
 {
-    double newAngle = m_rotationAngle - m_angleIncrement;
+    float newAngle = m_rotationAngle - m_angleIncrement;
     if (newAngle > PlayerModel::minPositionAngle)
     {
         setPosition(newAngle);

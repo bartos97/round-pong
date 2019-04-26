@@ -7,10 +7,12 @@ class Ball
 {
 public:
     Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, const glm::vec2& startPos);
+    Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va);
 
     void render();
     inline void setPosition(const glm::vec2& newPosition);
     void moveTo(const glm::vec2& newPosition);
+    void checkBounds();
 
 private:
     static const glm::mat4 identityMat4;
@@ -21,7 +23,6 @@ private:
     glm::vec2 m_position;
     glm::vec2 m_positionDisplacement;
     glm::mat4 m_transformMatrix;
-
 
     glm::vec2 generateRandomVector();
 };

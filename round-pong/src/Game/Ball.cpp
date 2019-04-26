@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Ball.h"
+#include "PlayerModel.h"
+#include "BallModel.h"
 #include <random>
 
 
@@ -11,7 +13,6 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
     if (!BallModel::isCreated())
         BallModel::generateModel();
 
-    RP_LOG("Ball created");
     m_modelShader = shader;
     m_modelVertexArray = va;
     m_velocity = 2.0f / 400.0f;
@@ -19,6 +20,23 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
     m_transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, 0.0f));
     moveTo(generateRandomVector());
+    
+    RP_LOG("Ball created at position: x = %f, y = %f", m_position.x ,m_position.y);
+}
+
+
+Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va)
+    : Ball(shader, va, generateRandomVector())
+{}
+
+
+void Ball::render()
+{
+    checkBounds();
+    glm::vec2 tmpVec = m_position + m_positionDisplacement;
+    setPosition(tmpVec);
+    m_modelShader.get()->setUniform("u_playerTransform", m_transformMatrix);
+    Renderer::draw(m_modelVertexArray, m_modelShader);
 }
 
 
@@ -37,27 +55,43 @@ void Ball::moveTo(const glm::vec2& newPosition)
 }
 
 
-void Ball::render()
+void Ball::checkBounds()
 {
-    glm::vec2 tmpVec = m_position + m_positionDisplacement;
-    setPosition(tmpVec);
-    m_modelShader.get()->setUniform("u_playerTransform", m_transformMatrix);
-    Renderer::draw(m_modelVertexArray, m_modelShader);
+    //TODO: implement bounce physics
+    float distance = glm::distance(m_position + m_positionDisplacement, glm::vec2(0.0f, 0.0f));
+    if (double(distance) + BallModel::radius > PlayerModel::innerRadius)
+    {
+        m_positionDisplacement = -m_positionDisplacement;
+    }
 }
 
 
 glm::vec2 Ball::generateRandomVector()
 {
+    glm::vec2 returnVec;
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::uniform_real_distribution<float> floatDistribution(0, 1);
+    std::uniform_real_distribution<float> intPosDistribution(0.0f, 1.0f);
     std::bernoulli_distribution signDistribution(0.5);
 
-    float tmpX = floatDistribution(generator);
-    float tmpY = floatDistribution(generator);
-
+    float tmpX = intPosDistribution(generator);
+    float tmpY = intPosDistribution(generator);
     if (!signDistribution(generator)) tmpX = -tmpX;
     if (!signDistribution(generator)) tmpY = -tmpY;
+    returnVec = { tmpX, tmpY };
 
-    return glm::vec2(tmpX, tmpY);
+    float maxRadius = float(PlayerModel::innerRadius - BallModel::radius - 0.01);
+
+    if (glm::distance(returnVec, glm::vec2(0.0f, 0.0f)) > maxRadius)
+    {
+        //angle between x axis and new random point
+        double theta = std::atan2(returnVec.y, returnVec.x);
+
+        //point colinear with new random point, but inside game circle
+        glm::vec2 pointOnCircle(std::cos(theta) * maxRadius,
+                                std::sin(theta) * maxRadius);
+        returnVec = pointOnCircle;
+    }
+
+    return returnVec;
 }

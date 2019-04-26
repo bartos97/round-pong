@@ -9,6 +9,7 @@ public:
     Player(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, double startAngle);
     
     void setPosition(double angle);
+    void setPosition(float angle);
     void goUp();
     void goDown();
     void render();
