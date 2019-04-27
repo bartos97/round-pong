@@ -74,6 +74,25 @@ void Application::run()
     m_opponentPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, M_PI);
     m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr);
 
+    Ball localBalls[] = {
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr),
+        Ball(basicShaderPtr, ballVertexArrayPtr)
+    };
+
     RP_LOG("Entering the game loop");
     while (m_isRunning)
     {
@@ -83,6 +102,8 @@ void Application::run()
         m_userPlayer->render();
         m_opponentPlayer->render();
         m_gameBall->render();
+
+        //for (auto& ball : localBalls) ball.render();
 
         m_window->onUpdate();
     }
@@ -185,12 +206,14 @@ void Application::checkForCollisions()
     if (m_gameBall->checkBounds())
     {
         glm::vec2 ballPosition = m_gameBall->getPosition();
-        double ballAngle = std::atan2(ballPosition.y, ballPosition.x);
+        double ballAngleBottom = std::atan2(ballPosition.y - BallModel::radius, ballPosition.x);
+        double ballAngleTop = std::atan2(ballPosition.y + BallModel::radius, ballPosition.x);
         double playerPosAngle = double(m_userPlayer->getPositionAngle());
         double opponentPosAngle = double(m_opponentPlayer->getPositionAngle());
         double playerModelHalfAngle = PlayerModel::modelSizeAngle / 2.0;
 
-        if (ballAngle <= playerPosAngle + playerModelHalfAngle && ballAngle >= playerPosAngle - playerModelHalfAngle)
+        if (ballAngleBottom <= playerPosAngle + playerModelHalfAngle && 
+            ballAngleTop >= playerPosAngle - playerModelHalfAngle)
         {
             RP_LOG("Ball collides with user's Player");
             //TODO: calculate reflection vector based on ball's drection vector 
@@ -199,7 +222,8 @@ void Application::checkForCollisions()
             m_gameBall->moveTo({ 0.0f, 0.0f });
         }
         //TODO: not working correctly when ball beneath x axis
-        else if (ballAngle <= opponentPosAngle + playerModelHalfAngle && ballAngle >= opponentPosAngle - playerModelHalfAngle)
+        else if (ballAngleBottom <= opponentPosAngle + playerModelHalfAngle && 
+                 ballAngleTop >= opponentPosAngle - playerModelHalfAngle)
         {
             RP_LOG("Ball collides with automatic Player");
             //TODO: same as above
