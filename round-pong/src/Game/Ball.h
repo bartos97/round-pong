@@ -12,7 +12,15 @@ public:
     void render();
     inline void setPosition(const glm::vec2& newPosition);
     void moveTo(const glm::vec2& newPosition);
-    void checkBounds();
+
+    const glm::vec2& getPosition() const;
+    const glm::vec2& getDirection() const;
+    
+    /**
+     * Checks if in next render call ball will be outside game's inner circle
+     * @return true if outside, false if inside
+     */
+    bool checkBounds();
 
 private:
     static const glm::mat4 identityMat4;
@@ -21,6 +29,7 @@ private:
 
     float m_velocity;
     glm::vec2 m_position;
+    glm::vec2 m_directionUnitVector;
     glm::vec2 m_positionDisplacement;
     glm::mat4 m_transformMatrix;
 

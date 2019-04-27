@@ -10,6 +10,9 @@ public:
     
     void setPosition(double angle);
     void setPosition(float angle);
+
+    float getPositionAngle() const;
+
     void goUp();
     void goDown();
     void render();

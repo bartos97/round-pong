@@ -79,6 +79,7 @@ void Application::run()
     {
         Renderer::clearScreen();
 
+        checkForCollisions();
         m_userPlayer->render();
         m_opponentPlayer->render();
         m_gameBall->render();
@@ -176,4 +177,48 @@ void Application::onMouseButtonRelease(MouseButtonReleaseEvent & e)
 {
     RP_EVENT_LOG(e, "Mouse button #%d released", e.getButton());
     e.m_isHandled = true;
+}
+
+
+void Application::checkForCollisions()
+{
+    if (m_gameBall->checkBounds())
+    {
+        glm::vec2 ballPosition = m_gameBall->getPosition();
+        double ballAngle = std::atan2(ballPosition.y, ballPosition.x);
+        double playerPosAngle = double(m_userPlayer->getPositionAngle());
+        double opponentPosAngle = double(m_opponentPlayer->getPositionAngle());
+        double playerModelHalfAngle = PlayerModel::modelSizeAngle / 2.0;
+
+        if (ballAngle <= playerPosAngle + playerModelHalfAngle && ballAngle >= playerPosAngle - playerModelHalfAngle)
+        {
+            RP_LOG("Ball collides with user's Player");
+            //TODO: calculate reflection vector based on ball's drection vector 
+            //and normal to Player's surface at this point, 
+            //so basicaly line from point of collision to origin
+            m_gameBall->moveTo({ 0.0f, 0.0f });
+        }
+        //TODO: not working correctly when ball beneath x axis
+        else if (ballAngle <= opponentPosAngle + playerModelHalfAngle && ballAngle >= opponentPosAngle - playerModelHalfAngle)
+        {
+            RP_LOG("Ball collides with automatic Player");
+            //TODO: same as above
+            m_gameBall->moveTo({ 0.0f, 0.0f });
+        }
+        else
+        {
+            if (ballPosition.x < 0.0)
+            {
+                RP_LOG("User wins");
+                m_gameBall->moveTo({ 0.0f, 0.0f });
+            }
+            else
+            {
+                RP_LOG("User loses");
+                m_gameBall->moveTo({ 0.0f, 0.0f });
+            }
+
+            //TODO: reset game
+        }
+    }
 }

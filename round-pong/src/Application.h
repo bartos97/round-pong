@@ -38,13 +38,13 @@ public:
 private:
     void onWindowClose(WindowCloseEvent& e);
     void onWindowResize(WindowResizeEvent& e);
-
     void onKeyPress(KeyPressEvent& e);
     void onKeyRelease(KeyReleaseEvent& e);
-
     void onMouseMove(MouseMoveEvent& e);
     void onMouseButtonPress(MouseButtonPressEvent& e);
     void onMouseButtonRelease(MouseButtonReleaseEvent& e);
+
+    void checkForCollisions();
 
     bool m_isRunning;
     static Application* m_instance;

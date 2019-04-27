@@ -18,6 +18,7 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
     m_velocity = 2.0f / 400.0f;
     m_position = startPos;
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
+    m_directionUnitVector = m_positionDisplacement;
     m_transformMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, 0.0f));
     moveTo(generateRandomVector());
     
@@ -50,19 +51,27 @@ void Ball::setPosition(const glm::vec2& newPosition)
 void Ball::moveTo(const glm::vec2& newPosition)
 {
     glm::vec2 moveVec(newPosition.x - m_position.x, newPosition.y - m_position.y);
-    moveVec = moveVec / glm::distance(m_position, newPosition);
-    m_positionDisplacement = moveVec * m_velocity;
+    m_directionUnitVector = moveVec / glm::distance(m_position, newPosition);
+    m_positionDisplacement = m_directionUnitVector * m_velocity;
 }
 
 
-void Ball::checkBounds()
+const glm::vec2& Ball::getPosition() const
 {
-    //TODO: implement bounce physics
+    return m_position;
+}
+
+
+const glm::vec2& Ball::getDirection() const
+{
+    return m_directionUnitVector;
+}
+
+
+bool Ball::checkBounds()
+{
     float distance = glm::distance(m_position + m_positionDisplacement, glm::vec2(0.0f, 0.0f));
-    if (double(distance) + BallModel::radius > PlayerModel::innerRadius)
-    {
-        m_positionDisplacement = -m_positionDisplacement;
-    }
+    return double(distance) + BallModel::radius > PlayerModel::innerRadius;
 }
 
 

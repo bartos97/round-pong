@@ -31,6 +31,12 @@ void Player::setPosition(float angle)
 }
 
 
+float Player::getPositionAngle() const
+{
+    return m_rotationAngle;
+}
+
+
 void Player::goUp()
 {
     float newAngle = m_rotationAngle + m_angleIncrement;
