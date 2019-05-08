@@ -61,37 +61,18 @@ void Application::run()
                                     PlayerModel::getVertices().data());
     ElementBuffer playerElementBuffer(unsigned int(PlayerModel::getIndecies().size()), 
                                       PlayerModel::getIndecies().data());
-    playerVertexArrayPtr.get()->assignData(playerVertexBuffer, playerElementBuffer, layoutVertices2D);
+    playerVertexArrayPtr->assignData(playerVertexBuffer, playerElementBuffer, layoutVertices2D);
 
     auto ballVertexArrayPtr = std::make_shared<VertexArray>();
     VertexBuffer ballVertexBuffer(unsigned int(BallModel::getVertices().size() * sizeof(float)), 
                                   BallModel::getVertices().data());
     ElementBuffer ballElementBuffer(unsigned int(BallModel::getIndecies().size()), 
                                     BallModel::getIndecies().data());
-    ballVertexArrayPtr.get()->assignData(ballVertexBuffer, ballElementBuffer, layoutVertices2D);
+    ballVertexArrayPtr->assignData(ballVertexBuffer, ballElementBuffer, layoutVertices2D);
 
     m_userPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, 0.0);
     m_opponentPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, M_PI);
     m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr);
-
-    Ball localBalls[] = {
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr),
-        Ball(basicShaderPtr, ballVertexArrayPtr)
-    };
 
     RP_LOG("Entering the game loop");
     while (m_isRunning)
@@ -102,8 +83,6 @@ void Application::run()
         m_userPlayer->render();
         m_opponentPlayer->render();
         m_gameBall->render();
-
-        //for (auto& ball : localBalls) ball.render();
 
         m_window->onUpdate();
     }
@@ -205,41 +184,27 @@ void Application::checkForCollisions()
 {
     if (m_gameBall->checkBounds())
     {
-        glm::vec2 ballPosition = m_gameBall->getPosition();
-        double ballAngleBottom = std::atan2(ballPosition.y - BallModel::radius, ballPosition.x);
-        double ballAngleTop = std::atan2(ballPosition.y + BallModel::radius, ballPosition.x);
-        double playerPosAngle = double(m_userPlayer->getPositionAngle());
-        double opponentPosAngle = double(m_opponentPlayer->getPositionAngle());
-        double playerModelHalfAngle = PlayerModel::modelSizeAngle / 2.0;
-
-        if (ballAngleBottom <= playerPosAngle + playerModelHalfAngle && 
-            ballAngleTop >= playerPosAngle - playerModelHalfAngle)
+        if (m_userPlayer->checkCollision(m_gameBall))
         {
             RP_LOG("Ball collides with user's Player");
-            //TODO: calculate reflection vector based on ball's drection vector 
-            //and normal to Player's surface at this point, 
-            //so basicaly line from point of collision to origin
-            m_gameBall->moveTo({ 0.0f, 0.0f });
+            m_gameBall->bounce();
         }
-        //TODO: not working correctly when ball beneath x axis
-        else if (ballAngleBottom <= opponentPosAngle + playerModelHalfAngle && 
-                 ballAngleTop >= opponentPosAngle - playerModelHalfAngle)
+        else if (m_opponentPlayer->checkCollision(m_gameBall))
         {
             RP_LOG("Ball collides with automatic Player");
-            //TODO: same as above
-            m_gameBall->moveTo({ 0.0f, 0.0f });
+            m_gameBall->bounce();
         }
         else
         {
-            if (ballPosition.x < 0.0)
+            if (m_gameBall->getPosition().x < 0.0)
             {
                 RP_LOG("User wins");
-                m_gameBall->moveTo({ 0.0f, 0.0f });
+                m_gameBall->bounce();
             }
             else
             {
                 RP_LOG("User loses");
-                m_gameBall->moveTo({ 0.0f, 0.0f });
+                m_gameBall->bounce();
             }
 
             //TODO: reset game

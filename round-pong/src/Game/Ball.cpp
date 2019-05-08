@@ -15,7 +15,8 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
 
     m_modelShader = shader;
     m_modelVertexArray = va;
-    m_velocity = 2.0f / 400.0f;
+    m_velocity = 2.0f / 300.0f;
+    m_acceleration = m_velocity / 20.0f;
     m_position = startPos;
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
     m_directionUnitVector = m_positionDisplacement;
@@ -29,31 +30,6 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
 Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va)
     : Ball(shader, va, generateRandomVector())
 {}
-
-
-void Ball::render()
-{
-    checkBounds();
-    glm::vec2 tmpVec = m_position + m_positionDisplacement;
-    setPosition(tmpVec);
-    m_modelShader.get()->setUniform("u_playerTransform", m_transformMatrix);
-    Renderer::draw(m_modelVertexArray, m_modelShader);
-}
-
-
-void Ball::setPosition(const glm::vec2& newPosition)
-{
-    m_position = newPosition;
-    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
-}
-
-
-void Ball::moveTo(const glm::vec2& newPosition)
-{
-    glm::vec2 moveVec(newPosition.x - m_position.x, newPosition.y - m_position.y);
-    m_directionUnitVector = moveVec / glm::distance(m_position, newPosition);
-    m_positionDisplacement = m_directionUnitVector * m_velocity;
-}
 
 
 const glm::vec2& Ball::getPosition() const
@@ -72,6 +48,52 @@ bool Ball::checkBounds()
 {
     float distance = glm::distance(m_position + m_positionDisplacement, glm::vec2(0.0f, 0.0f));
     return double(distance) + BallModel::radius > PlayerModel::innerRadius;
+}
+
+
+void Ball::setDirection(const glm::vec2& direction)
+{
+    m_directionUnitVector = glm::normalize(direction);
+    m_positionDisplacement = m_directionUnitVector * m_velocity;
+}
+
+
+void Ball::moveTo(const glm::vec2& newPosition)
+{
+    glm::vec2 moveVec(newPosition.x - m_position.x, newPosition.y - m_position.y);
+    setDirection(moveVec);
+}
+
+
+void Ball::bounce()
+{
+    glm::vec2 surfaceNormal(-m_position.x, -m_position.y);
+    surfaceNormal = glm::normalize(surfaceNormal);
+    glm::vec2 reflectVector = glm::reflect(m_directionUnitVector, surfaceNormal);
+    setDirection(reflectVector);
+}
+
+
+void Ball::render()
+{
+    nextStep();
+    m_modelShader->setUniform("u_transformation", m_transformMatrix);
+    Renderer::draw(m_modelVertexArray, m_modelShader);
+}
+
+
+void Ball::setPosition(const glm::vec2& newPosition)
+{
+    m_position = newPosition;
+    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
+}
+
+
+void Ball::nextStep()
+{
+    m_positionDisplacement = m_directionUnitVector * m_velocity;
+    m_position += m_positionDisplacement;
+    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
 }
 
 
@@ -104,3 +126,4 @@ glm::vec2 Ball::generateRandomVector()
 
     return returnVec;
 }
+
