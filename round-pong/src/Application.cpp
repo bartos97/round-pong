@@ -150,10 +150,12 @@ void Application::onMouseMove(MouseMoveEvent & e)
 
     double angle = std::atan2(mouseY, mouseX);
     
+#ifdef RP_DEBUG
     //x and y in normalized device coordinates, i.e. [-1, 1]
     mouseX = mouseX / m_window->m_data.windowCenterX;
     mouseY = mouseY / m_window->m_data.windowCenterY;
     m_gameBall->moveTo(glm::vec2(mouseX, mouseY));
+#endif // RP_DEBUG
 
     RP_EVENT_LOG(e, "Mouse move at x:%lf y:%lf", mouseX, mouseY);
 
