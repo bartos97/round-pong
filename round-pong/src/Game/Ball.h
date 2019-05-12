@@ -20,15 +20,17 @@ public:
 
     void setDirection(const glm::vec2& direction);
     void moveTo(const glm::vec2& newPosition);
-    void bounce();
+    void bounce(bool applyForce = false);
 
     void render();    
 
 private:
-    static const glm::mat4 identityMat4;
+    static const glm::mat4 IDENTITY_MAT4;
+
     std::shared_ptr<Shader> m_modelShader;
     std::shared_ptr<VertexArray> m_modelVertexArray;
 
+    static const float BASE_VELOCITY;
     float m_velocity;
     float m_acceleration;
     glm::vec2 m_position;

@@ -5,7 +5,8 @@
 #include <random>
 
 
-const glm::mat4 Ball::identityMat4 = glm::mat4(1.0f);
+const glm::mat4 Ball::IDENTITY_MAT4 = glm::mat4(1.0f);
+const float Ball::BASE_VELOCITY = 2.0f / 80.0f;
 
 
 Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, const glm::vec2& startPos)
@@ -15,8 +16,8 @@ Ball::Ball(std::shared_ptr<Shader> shader, std::shared_ptr<VertexArray> va, cons
 
     m_modelShader = shader;
     m_modelVertexArray = va;
-    m_velocity = 2.0f / 300.0f;
-    m_acceleration = m_velocity / 20.0f;
+    m_velocity = Ball::BASE_VELOCITY;
+    m_acceleration = -m_velocity / 150.0f;
     m_position = startPos;
     m_positionDisplacement = glm::vec2(0.0f, 0.0f);
     m_directionUnitVector = m_positionDisplacement;
@@ -54,7 +55,6 @@ bool Ball::checkBounds()
 void Ball::setDirection(const glm::vec2& direction)
 {
     m_directionUnitVector = glm::normalize(direction);
-    m_positionDisplacement = m_directionUnitVector * m_velocity;
 }
 
 
@@ -65,12 +65,15 @@ void Ball::moveTo(const glm::vec2& newPosition)
 }
 
 
-void Ball::bounce()
+void Ball::bounce(bool applyForce)
 {
     glm::vec2 surfaceNormal(-m_position.x, -m_position.y);
     surfaceNormal = glm::normalize(surfaceNormal);
-    glm::vec2 reflectVector = glm::reflect(m_directionUnitVector, surfaceNormal);
-    setDirection(reflectVector);
+    glm::vec2 reflectionVector = glm::reflect(m_directionUnitVector, surfaceNormal);
+
+    if (applyForce)
+        m_velocity = Ball::BASE_VELOCITY;
+    m_directionUnitVector = reflectionVector;
 }
 
 
@@ -85,15 +88,17 @@ void Ball::render()
 void Ball::setPosition(const glm::vec2& newPosition)
 {
     m_position = newPosition;
-    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
+    m_transformMatrix = glm::translate(IDENTITY_MAT4, glm::vec3(m_position.x, m_position.y, 0.0f));
 }
 
 
 void Ball::nextStep()
 {
+    if (m_velocity > Ball::BASE_VELOCITY / 2.0f)
+        m_velocity += m_acceleration;
     m_positionDisplacement = m_directionUnitVector * m_velocity;
     m_position += m_positionDisplacement;
-    m_transformMatrix = glm::translate(identityMat4, glm::vec3(m_position.x, m_position.y, 0.0f));
+    m_transformMatrix = glm::translate(IDENTITY_MAT4, glm::vec3(m_position.x, m_position.y, 0.0f));
 }
 
 

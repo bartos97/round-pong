@@ -187,12 +187,12 @@ void Application::checkForCollisions()
         if (m_userPlayer->checkCollision(m_gameBall))
         {
             RP_LOG("Ball collides with user's Player");
-            m_gameBall->bounce();
+            m_gameBall->bounce(true);
         }
         else if (m_opponentPlayer->checkCollision(m_gameBall))
         {
             RP_LOG("Ball collides with automatic Player");
-            m_gameBall->bounce();
+            m_gameBall->bounce(true);
         }
         else
         {
