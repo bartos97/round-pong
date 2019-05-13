@@ -49,8 +49,9 @@ void Application::run()
     PlayerModel::generateModel();
     BallModel::generateModel();
 
-    std::string vertexShaderPath = Core::SRC_PATH + "Shaders/basic.vert";
-    std::string fragmentShaderPath = Core::SRC_PATH + "Shaders/basic.frag";
+    std::string vertexShaderPath = Core::PROJECT_ABS_PATH + "src/Shaders/basic.vert";
+    std::string fragmentShaderPath = Core::PROJECT_ABS_PATH + "src/Shaders/basic.frag";
+
     auto basicShaderPtr = std::make_shared<Shader>(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 
     BufferLayout layoutVertices2D;

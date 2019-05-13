@@ -15,9 +15,9 @@
 class Core
 {
 public:
-    static const std::string SRC_PATH;
+    static const std::string PROJECT_ABS_PATH;
 
 private:
-    static std::string getSrcPath();
+    static std::string getPath();
 };
 
