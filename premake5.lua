@@ -45,9 +45,9 @@ project "round-pong"
 	files {
 		"%{prj.name}/src/*",
 		"%{prj.name}/src/Events/*",
-		"%{prj.name}/src/Shaders/*",
 		"%{prj.name}/src/OpenGL/*",
-		"%{prj.name}/src/Game/*"
+		"%{prj.name}/src/Game/*",
+		"%{prj.name}/res/Shaders/*",
 	}
 
 	-- Include file search paths for the compiler.
