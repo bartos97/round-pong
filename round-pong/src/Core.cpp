@@ -16,8 +16,14 @@ std::string Core::getPath()
         pos = tmpPos;
         tmpPos++;
     }
-
     path = path.substr(0, pos);
+
+    char lastChar = path.at(path.size() - 1);
+    if (!(lastChar == '\\' || lastChar == '/'))
+    {
+        path += '/';
+    }
+
     //TODO: get project name from preproc define instead of typing by hand
     path += "round-pong/";
     RP_LOG("Project path: %s", path.c_str());
