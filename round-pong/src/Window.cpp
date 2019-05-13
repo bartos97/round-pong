@@ -70,7 +70,10 @@ void Window::initGlad()
 {
     int tmpStatus = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     RP_ASSERT(tmpStatus, "Glad initialization fail.");
-	RP_LOG("OpenGL version: %s", glGetString(GL_VERSION));
+    RP_LOG("GPU info: \nVendor: %s\nRenderer: %s\nVersion: %s", 
+           glGetString(GL_VENDOR),
+           glGetString(GL_RENDERER),
+           glGetString(GL_VERSION));
 }
 
 
