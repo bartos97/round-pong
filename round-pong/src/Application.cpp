@@ -73,7 +73,7 @@ void Application::run()
 
     m_userPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, 0.0);
     m_opponentPlayer = std::make_unique<Player>(basicShaderPtr, playerVertexArrayPtr, M_PI);
-    m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr);
+    m_gameBall = std::make_unique<Ball>(basicShaderPtr, ballVertexArrayPtr, glm::vec2(0.0f, 0.0f));
 
     RP_LOG("Entering the game loop");
     while (m_isRunning)
