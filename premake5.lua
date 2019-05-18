@@ -37,6 +37,9 @@ project "round-pong"
 	-- Output directories for executables and intermediates objs.
 	targetdir ("bin/" .. outputDirName .. "/%{prj.name}")
 	objdir ("bin/" .. outputDirName .. "/%{prj.name}/obj")
+	
+	-- Working directory (for relative paths etc.) = executable directory
+	debugdir ("%{cfg.targetdir}")
 
 	-- Precompiled headers
 	pchsource "round-pong/src/pch.cpp"
